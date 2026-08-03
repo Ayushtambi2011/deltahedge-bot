@@ -59,6 +59,21 @@ def build_iron_condor(rows, short_delta=0.16, wing_pct=0.02):
     ]
 
 
+def build_cheap_strangle(rows, offset=400.0, max_prem=100.0):
+    """Buy call at ~spot+offset and put at ~spot-offset, ONLY if BOTH mids <= max_prem.
+    A low-cost bet on a big daily move. Returns legs or None if the condition isn't met."""
+    spot = rows[0]["spot"]
+    if not spot:
+        return None
+    call = _nearest_by_strike(rows, "call", spot + offset)
+    put = _nearest_by_strike(rows, "put", spot - offset)
+    if not (call and put) or call["mid"] is None or put["mid"] is None:
+        return None
+    if call["mid"] <= max_prem and put["mid"] <= max_prem:
+        return [_leg(call, +1), _leg(put, +1)]
+    return None
+
+
 def build_long_strangle(rows, target_delta=0.25):
     sc = _nearest_by_delta(rows, "call", target_delta)
     sp = _nearest_by_delta(rows, "put", target_delta)

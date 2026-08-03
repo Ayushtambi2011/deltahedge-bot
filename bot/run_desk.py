@@ -115,12 +115,18 @@ ACCOUNT_USD = 1000.0
 RESERVE_PCT = 0.30              # keep 30% of account FREE for later modifications/rolls
 MARGIN_PER_TRADE = 100.0       # $ margin budget allocated to a single signal
 
+# --- cheap-strangle scanner (BTC daily): buy +/- offset if BOTH premiums <= max ---
+CHEAP_STRANGLE_OFFSET = 400.0
+CHEAP_STRANGLE_MAX_PREM = 100.0
+
 
 def size_qty(max_loss_per_contract):
-    """Contracts sized so this trade's margin (~max loss) fits MARGIN_PER_TRADE."""
+    """Contracts sized so this trade's margin (~max loss) fits MARGIN_PER_TRADE,
+    rounded to the nearest 10 for clean order entry (min 10)."""
     if not max_loss_per_contract or max_loss_per_contract <= 0:
-        return 1
-    return max(1, int(MARGIN_PER_TRADE / max_loss_per_contract))
+        return 10
+    raw = MARGIN_PER_TRADE / max_loss_per_contract
+    return max(10, int(round(raw / 10.0) * 10))
 
 
 def tp_sl_prices(credit):
@@ -143,30 +149,44 @@ def already_open(asset, strat, exp_s):
 def format_signal(asset, strat, exp, exp_type, legs, chain, iv, intel, mult, why,
                   soon, liq_notes, warns, ng, credit, max_loss):
     spot = chain[0]["spot"]
+    qty = size_qty(max_loss)
     mp = max_profit(legs, credit, mult, spot)
     bes = breakevens(legs, credit, mult, spot)
     pop = pop_estimate(legs, chain)
     dot = "🟢" if credit > 0 else "🟡"
-    lines = [f"{dot} <b>{asset} {strat.replace('_',' ').upper()}</b> · {exp_type.upper()} · exp {exp}",
-             f"spot {spot:,.0f} · ATM IV {iv:.0f}% · <i>{why}</i>" if iv else f"spot {spot:,.0f} · <i>{why}</i>",
-             ""]
-    for l in legs:
-        s = "SELL" if l["side"] < 0 else "BUY "
-        lines.append(f"  {s} {l['type'].upper()} {l['strike']:.0f} @ {l['entry_premium']}")
-    qty = size_qty(max_loss)
-    tp, sl, action = tp_sl_prices(credit)
-    net_lbl = "credit" if credit > 0 else "debit"
-    reserve = round(ACCOUNT_USD * RESERVE_PCT)
+    # totals for the whole position (qty contracts)
     tot_credit = abs(credit) * qty
     tot_ml = max_loss * qty
+    tot_mp = mp * qty
+    reserve = round(ACCOUNT_USD * RESERVE_PCT)
+    is_credit = credit > 0
+    # TP/SL as WHOLE-POSITION dollar outcomes
+    if is_credit:
+        tp_cost = 0.5 * tot_credit          # buy the spread back for half the credit
+        tp_line = f"🎯 TP: buy back all legs for ≤ ${tp_cost:,.2f}  → keep +${tot_credit - tp_cost:,.2f}"
+        sl_cost = 2.0 * tot_credit
+        sl_line = f"🛑 SL: if buy-back cost hits ${sl_cost:,.2f}  → cut loss ≈ -${sl_cost - tot_credit:,.2f}"
+    else:
+        tp_val = 2.0 * tot_credit
+        tp_line = f"🎯 TP: sell all legs for ≥ ${tp_val:,.2f}  → +${tot_credit:,.2f}"
+        sl_val = 0.5 * tot_credit
+        sl_line = f"🛑 SL: if value falls to ${sl_val:,.2f}  → -${sl_val:,.2f}"
+
+    lines = [f"{dot} <b>{asset} {strat.replace('_',' ').upper()}</b> · {exp_type.upper()} · exp {exp}",
+             f"spot {spot:,.0f} · ATM IV {iv:.0f}% · <i>{why}</i>" if iv else f"spot {spot:,.0f} · <i>{why}</i>",
+             f"📦 <b>Qty {qty} contracts per leg</b> · margin ~${tot_ml:,.0f} · ${reserve} kept free", ""]
+    for l in legs:
+        s = "SELL" if l["side"] < 0 else "BUY "
+        lines.append(f"  {s} {qty}× {l['type'].upper()} {l['strike']:.0f} @ {l['entry_premium']}")
+    mp_txt = f"${tot_mp:,.2f}" if is_credit else "uncapped (big move)"
     lines += ["",
-              f"📦 <b>Qty {qty} contracts</b> · est. margin ${tot_ml:,.0f} · ${reserve} kept free for mods",
-              f"Per-contract: {net_lbl} {round(abs(credit),4)} · max loss {round(max_loss,4)} · max profit {round(mp,4)}",
-              f"Position: {net_lbl} ${tot_credit:,.2f} · max loss ${tot_ml:,.2f}",
-              f"Breakevens {' – '.join(f'{b:,.0f}' for b in bes) if bes else '—'}",
-              f"POP ~ {pop*100:.0f}%",
-              f"🎯 TP {action} @ net {tp} · 🛑 SL @ net {sl}",
-              f"Net Δ {ng['delta']:+.3f} Γ {ng['gamma']:+.4f} Θ {ng['theta']:+.1f} V {ng['vega']:+.1f}"]
+              f"💰 Position {'credit' if is_credit else 'debit'} <b>${tot_credit:,.2f}</b> · "
+              f"max loss <b>${tot_ml:,.2f}</b> · max profit {mp_txt}",
+              f"Breakevens {' – '.join(f'{b:,.0f}' for b in bes) if bes else '—'} · POP ~ {pop*100:.0f}%",
+              tp_line, sl_line,
+              f"Position greeks: Δ {ng['delta']*qty:+.1f} Θ {ng['theta']*qty:+.1f} V {ng['vega']*qty:+.1f}",
+              "🔁 Manage as ONE position — close all legs together at TP or SL; "
+              "don't wait for expiry unless neither is hit."]
     if intel:
         lines.append(f"Context: support {intel['support'][0]:.0f} / resist {intel['resistance'][0]:.0f} "
                      f"/ max pain {intel['max_pain']:.0f} · bias {intel['bias']}")
@@ -255,6 +275,22 @@ def entry_run():
                 paper_tracker.open_trade(asset, strat_label, exp_s, legs,
                                          round(credit, 4), round(max_loss, 4))
                 print(f"{asset} {exp_type}: signalled {strat_label} (greeks_ok={ok}) — {why}")
+
+            # --- extra scanner: cheap strangle on BTC daily (buy +/-offset if both premiums cheap) ---
+            if asset == "BTC" and exp_type == "daily" and not already_open(asset, "cheap_strangle", exp_s):
+                cs = chain_loader.build_cheap_strangle(chain, CHEAP_STRANGLE_OFFSET, CHEAP_STRANGLE_MAX_PREM)
+                if cs:
+                    ok, ng, warns = greeks.check(cs, chain, asset, spot, strategy="cheap_strangle")
+                    credit, max_loss = credit_and_maxloss(cs, mult, spot)
+                    why = f"cheap strangle: ±{CHEAP_STRANGLE_OFFSET:.0f} premiums ≤ {CHEAP_STRANGLE_MAX_PREM:.0f}"
+                    msg = format_signal(asset, "cheap_strangle", exp, exp_type, cs, chain, iv,
+                                        intel, mult, why, soon, [], warns, ng, credit, max_loss)
+                    send_telegram(msg)
+                    paper_tracker.open_trade(asset, "cheap_strangle", exp_s, cs,
+                                             round(credit, 4), round(max_loss, 4))
+                    print(f"{asset} daily: cheap_strangle FIRED")
+                else:
+                    print(f"{asset} daily: cheap_strangle condition not met")
     perf = paper_tracker.build_performance()
     print(f"performance.json updated · settled={perf['total_settled']} open={perf['open_positions']}")
 

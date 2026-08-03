@@ -35,7 +35,7 @@ def net_greeks(legs, chain, mult):
 
 
 # strategies that are LONG volatility / debit — negative theta & non-neutral are BY DESIGN
-LONG_VOL = {"long_strangle", "long_straddle", "calendar_spread"}
+LONG_VOL = {"long_strangle", "long_straddle", "calendar_spread", "cheap_strangle"}
 
 
 def check(legs, chain, asset, spot, strategy="iron_condor", caps=None):

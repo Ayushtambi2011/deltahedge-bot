@@ -59,17 +59,16 @@ def check():
             if breached:
                 roll = _suggest_roll(chain, leg["type"], spot)
                 dt = f"{d:.2f}" if d is not None else "?"
-                line = (f"{leg['type'].upper()} {leg['strike']:.0f} tested (Δ {dt}"
-                        f", buy-back ~{buyback})")
+                block = [f"Tested: SELL {leg['type'].upper()} {leg['strike']:.0f} (Δ {dt})"]
                 if roll:
-                    line += (f"\n   ↳ ROLL to {roll['strike']:.0f} (Δ {roll['delta']:.2f}), "
-                             f"sell ~{roll['mid']}")
-                alerts.append(line)
+                    block.append(f"  • BUY to close  {leg['type'].upper()} {leg['strike']:.0f} @ ~{buyback}")
+                    block.append(f"  • SELL to open  {leg['type'].upper()} {roll['strike']:.0f} @ ~{roll['mid']} (Δ {roll['delta']:.2f})")
+                alerts.append("\n".join(block))
         if alerts:
-            msg = (f"⚠️ <b>Adjust · {asset} {tr['strategy']}</b> · spot {spot:.0f}\n"
-                   + "\n".join("• " + a for a in alerts) +
-                   "\n\nOptions: ROLL the tested side to the suggested strike, or CLOSE at your SL.\n"
-                   "⚠️ SIGNAL ONLY — you decide & place it (docs/03).")
+            msg = (f"⚠️ <b>ADJUST · {asset} {tr['strategy'].replace('_',' ').upper()}</b> · spot {spot:,.0f}\n\n"
+                   + "\n".join(alerts) +
+                   "\n\nApply the roll on the SAME quantity as your position, or CLOSE the whole "
+                   "position at your SL.\n⚠️ PAPER — you decide & place it (docs/03).")
             send_telegram(msg)
             print(f"alert sent for {tr['id']}")
         else:
