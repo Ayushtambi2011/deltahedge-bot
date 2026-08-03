@@ -249,7 +249,7 @@ def entry_run():
 
             picks = strategy_selector.select(iv, asset, event_soon=bool(soon), in_blackout=False)
             if not picks:
-                print(f"{asset} {exp_type}: NO TRADE"); continue
+                print(f"{asset} {exp_type}: NO TRADE (regime)")   # note: no 'continue' — scanner below still runs
 
             for strat, why in picks:
                 strat_label = strat if exp_type == "daily" else strat + "_wk"

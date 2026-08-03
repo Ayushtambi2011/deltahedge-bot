@@ -11,3 +11,4 @@ __pycache__/
 *.log
 
 # keep data/ tracked — it IS the datastore on GitHub Actions (trade logs, chains, performance.json)
+OPTIONS STRATEGIES/
