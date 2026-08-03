@@ -1,0 +1,13 @@
+# NEVER commit secrets
+bot/.env
+.env
+
+# Python cruft
+__pycache__/
+*.pyc
+*.pyo
+
+# local scratch
+*.log
+
+# keep data/ tracked — it IS the datastore on GitHub Actions (trade logs, chains, performance.json)

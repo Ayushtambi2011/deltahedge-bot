@@ -1,0 +1,41 @@
+name: desk-brief
+# Daily brief (news + market structure). 01:30 UTC = 07:00 IST. Weekly section auto on Mondays.
+on:
+  schedule:
+    - cron: '30 1 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: desk-data
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      COINGLASS_API_KEY: ${{ secrets.COINGLASS_API_KEY }}
+      DELTA_BASE_URL: https://api.india.delta.exchange
+      DRY_RUN: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - name: daily brief
+        working-directory: bot
+        run: python3 daily_brief.py
+      - name: persist data
+        if: always()
+        run: |
+          git config user.name "deltahedge-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add data/ 2>/dev/null || true
+          git commit -m "brief $(date -u +%FT%TZ)" || { echo "no changes"; exit 0; }
+          git pull --rebase --autostash origin ${{ github.ref_name }} || true
+          git push

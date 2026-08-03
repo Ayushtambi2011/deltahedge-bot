@@ -1,0 +1,12 @@
+# Reference crontab (setup_vps.sh installs this automatically with correct paths).
+# Times are UTC. IST = UTC + 5:30, so 03:30 UTC = 09:00 IST.
+# Adjust the entry time to when you want to place the daily trade.
+#
+# Replace PROJECT with your absolute path, e.g. /home/ubuntu/options
+#
+# 30 3 * * *   cd PROJECT/bot && python3 run_desk.py --mode entry     # daily entry signal (09:00 IST)
+# */10 * * * * cd PROJECT/bot && python3 run_desk.py --mode monitor   # adjust/IV alerts while open
+# 0 20 * * *   cd PROJECT/bot && python3 paper_tracker.py             # settle + rebuild dashboard feed
+# 0 3 * * *    cd PROJECT/bot && python3 heartbeat.py                 # daily "desk alive" digest (08:30 IST)
+# 0 7 * * *    cd PROJECT/bot && python3 news_digest.py               # daily US red-news (12:30 IST); auto weekly on Mon
+#   For 07:00 IST news instead use:  30 1 * * *   (01:30 UTC)

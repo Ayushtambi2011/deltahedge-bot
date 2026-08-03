@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DeltaHedge · Options Paper Desk</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0e1424; --card:#141b30; --card2:#182140;
+    --line:#222e4d; --txt:#e8edf9; --mut:#8a97b8; --accent:#2dd4bf;
+    --accent2:#6366f1; --green:#34d399; --red:#f87171; --amber:#fbbf24;
+    --grad:linear-gradient(135deg,#2dd4bf 0%,#6366f1 100%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',-apple-system,Segoe UI,Roboto,sans-serif;background:
+    radial-gradient(1200px 600px at 80% -10%,rgba(99,102,241,.18),transparent 60%),
+    radial-gradient(900px 500px at 0% 0%,rgba(45,212,191,.12),transparent 55%),var(--bg);
+    color:var(--txt);min-height:100vh;padding:28px;letter-spacing:.2px}
+  .wrap{max-width:1200px;margin:0 auto}
+  header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:26px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{width:46px;height:46px;border-radius:13px;background:var(--grad);display:grid;place-items:center;font-weight:800;font-size:20px;color:#06121f;box-shadow:0 8px 30px rgba(45,212,191,.35)}
+  h1{font-size:22px;font-weight:800;letter-spacing:.3px}
+  .sub{color:var(--mut);font-size:13px;margin-top:2px}
+  .badges{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .pill{font-size:12px;padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--mut);display:flex;align-items:center;gap:7px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(52,211,153,.2);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+  .paper{background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.4);color:var(--amber)}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;position:relative;overflow:hidden}
+  .kpi::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--grad)}
+  .kpi .lab{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+  .kpi .val{font-size:28px;font-weight:800;margin-top:8px;font-variant-numeric:tabular-nums}
+  .kpi .meta{font-size:12px;margin-top:4px;color:var(--mut)}
+  .grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:22px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+  .panel h2{font-size:14px;text-transform:uppercase;letter-spacing:1.2px;color:var(--mut);margin-bottom:16px;font-weight:700}
+  .iv-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+  .iv-row:last-child{border-bottom:none}
+  .iv-asset{font-weight:700;font-size:15px}
+  .iv-val{font-variant-numeric:tabular-nums;font-weight:700}
+  .tag{font-size:11px;padding:3px 9px;border-radius:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+  .tag.quiet{background:rgba(52,211,153,.15);color:var(--green)}
+  .tag.vol{background:rgba(248,113,113,.15);color:var(--red)}
+  .strats{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:14px}
+  .scard{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:16px;transition:transform .15s,border-color .15s}
+  .scard:hover{transform:translateY(-3px);border-color:var(--accent)}
+  .scard.best{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 10px 30px rgba(45,212,191,.15)}
+  .scard .nm{font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+  .crown{font-size:11px;color:var(--accent);font-weight:700}
+  .scard .net{font-size:24px;font-weight:800;margin:10px 0 2px;font-variant-numeric:tabular-nums}
+  .scard .stat{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-top:6px}
+  .bar{height:6px;border-radius:4px;background:var(--line);margin-top:12px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:4px}
+  .pos{color:var(--green)} .neg{color:var(--red)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;color:var(--mut);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.6px;padding:10px 8px;border-bottom:1px solid var(--line)}
+  td{padding:11px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+  tr:last-child td{border-bottom:none}
+  .chip{font-size:11px;padding:3px 8px;border-radius:6px;background:var(--card2);color:var(--accent);border:1px solid var(--line)}
+  footer{color:var(--mut);font-size:12px;text-align:center;margin-top:26px;line-height:1.7}
+  @media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">Δ</div>
+      <div>
+        <h1>DeltaHedge <span style="color:var(--mut);font-weight:500">· Options Paper Desk</span></h1>
+        <div class="sub">BTC / ETH daily-expiry hedged strategies · Delta Exchange India</div>
+      </div>
+    </div>
+    <div class="badges">
+      <span class="pill paper">◆ PAPER TRADING</span>
+      <span class="pill"><span class="dot"></span>Live · <span id="updated">—</span></span>
+    </div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi"><div class="lab">Net P&L (after tax)</div><div class="val" id="k-pnl">—</div><div class="meta">per contract · FNO tax</div></div>
+    <div class="kpi"><div class="lab">Win Rate</div><div class="val" id="k-win">—</div><div class="meta" id="k-win-m">across all strategies</div></div>
+    <div class="kpi"><div class="lab">Settled Trades</div><div class="val" id="k-trades">—</div><div class="meta">paper positions closed</div></div>
+    <div class="kpi"><div class="lab">Open Positions</div><div class="val" id="k-open">—</div><div class="meta">awaiting expiry</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h2>Paper Equity Curve</h2>
+      <canvas id="equity" height="120"></canvas>
+    </div>
+    <div class="panel">
+      <h2>IV Monitor</h2>
+      <div id="iv-list"></div>
+      <div style="margin-top:14px;font-size:12px;color:var(--mut)">Regime read drives strategy choice. High IV → sell premium (condor). Event/spike → strangle.</div>
+    </div>
+  </div>
+
+  <div class="grid" style="grid-template-columns:1fr 1fr">
+    <div class="panel">
+      <h2>⚡ Economic Events <span style="color:var(--mut);font-weight:400;text-transform:none;letter-spacing:0">— crypto movers (ForexFactory)</span></h2>
+      <table><tbody id="events"></tbody></table>
+    </div>
+    <div class="panel">
+      <h2>🧲 Liquidation Levels <span style="color:var(--mut);font-weight:400;text-transform:none;letter-spacing:0">— clusters (manual / Coinglass Pro)</span></h2>
+      <div id="liq"></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:22px">
+    <h2>Strategy Performance <span style="color:var(--mut);font-weight:400;text-transform:none;letter-spacing:0">— which one actually works</span></h2>
+    <div class="strats" id="strats"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Recent Signals</h2>
+    <table>
+      <thead><tr><th>Time</th><th>Asset</th><th>Strategy</th><th>Regime</th><th>Legs</th></tr></thead>
+      <tbody id="signals"></tbody>
+    </table>
+  </div>
+
+  <footer>
+    <b>Paper trading only.</b> No orders are placed. Nothing here is financial advice.<br/>
+    Data refreshes from <code>data/performance.json</code> · Review after 1–2 months to keep, kill, or tune each strategy.
+  </footer>
+</div>
+
+<script>
+// Fallback sample so the page always looks good (mirrors data/performance.json).
+const SAMPLE = {
+  updated:"2026-08-03T09:30:00", open_positions:2, total_settled:41,
+  equity_curve:[{date:"07-05",equity:0},{date:"07-08",equity:.18},{date:"07-11",equity:.05},{date:"07-14",equity:.31},{date:"07-17",equity:.52},{date:"07-20",equity:.29},{date:"07-23",equity:.61},{date:"07-26",equity:.88},{date:"07-29",equity:.74},{date:"08-01",equity:1.12}],
+  strategies:{
+    iron_condor:{trades:18,win_rate:72.2,profit_factor:1.18,net:.64,net_after_tax:.45},
+    iron_butterfly:{trades:7,win_rate:57.1,profit_factor:.94,net:-.08,net_after_tax:-.08},
+    broken_wing_butterfly:{trades:6,win_rate:66.7,profit_factor:1.09,net:.21,net_after_tax:.15},
+    long_strangle:{trades:7,win_rate:28.6,profit_factor:.71,net:-.19,net_after_tax:-.19},
+    calendar_spread:{trades:3,win_rate:66.7,profit_factor:1.22,net:.14,net_after_tax:.10}
+  }
+};
+const IV_SAMPLE=[{asset:"BTC",iv:58.4,rank:63,regime:"quiet"},{asset:"ETH",iv:71.2,rank:78,regime:"vol"}];
+const SIG_SAMPLE=[
+  {t:"09:15",asset:"ETH",strat:"iron_condor",regime:"quiet",legs:"S 3550P / B 3475P / S 3850C / B 3925C"},
+  {t:"09:15",asset:"BTC",strat:"iron_condor",regime:"quiet",legs:"S 60000P / B 58800P / S 66000C / B 67200C"},
+  {t:"Yst",asset:"BTC",strat:"long_strangle",regime:"vol",legs:"B 61000P / B 66000C"}
+];
+const EV_SAMPLE=[
+  {t:"19:30",cc:"USD",imp:"High",title:"ISM Manufacturing PMI"},
+  {t:"Fri",cc:"USD",imp:"High",title:"Non-Farm Employment Change"},
+  {t:"Fri",cc:"USD",imp:"High",title:"Unemployment Rate"}
+];
+const LIQ_SAMPLE=[{price:66000,intensity:.80},{price:65000,intensity:.85},{price:64000,intensity:.90},{price:62000,intensity:.95},{price:60000,intensity:.70}];
+const MOVERS=/(CPI|FOMC|Federal Funds|Interest Rate|Non-?Farm|Unemployment Rate|Average Hourly Earnings|ISM|PPI|Powell|Fed Chair|PCE)/i;
+const nice=s=>s.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+const money=v=>(v>=0?'+':'')+v.toFixed(2);
+
+async function load(){
+  let d=SAMPLE,live=false;
+  try{const r=await fetch('../data/performance.json',{cache:'no-store'});if(r.ok){const j=await r.json();if(j.strategies&&Object.keys(j.strategies).length){d=j;live=true;}}}catch(e){}
+  if(!live){document.getElementById('updated').insertAdjacentHTML('afterend',' · <span style="color:var(--amber)">preview data — awaiting first paper trades</span>');}
+  render(d);
+}
+function render(d){
+  document.getElementById('updated').textContent=(d.updated||'').replace('T',' ').slice(0,16);
+  const strat=d.strategies||{};
+  let net=0,tr=0,wsum=0;
+  Object.values(strat).forEach(s=>{net+=(s.net_after_tax??s.net??0);tr+=s.trades||0;wsum+=(s.win_rate||0)*(s.trades||0);});
+  const winAvg=tr?(wsum/tr):0;
+  const pnlEl=document.getElementById('k-pnl');
+  pnlEl.textContent=money(net);pnlEl.className='val '+(net>=0?'pos':'neg');
+  document.getElementById('k-win').textContent=winAvg.toFixed(1)+'%';
+  document.getElementById('k-trades').textContent=d.total_settled??tr;
+  document.getElementById('k-open').textContent=d.open_positions??0;
+
+  // strategy cards, sorted by net_after_tax
+  const entries=Object.entries(strat).sort((a,b)=>(b[1].net_after_tax??b[1].net)-(a[1].net_after_tax??a[1].net));
+  const best=entries[0]?.[0];
+  const maxAbs=Math.max(...entries.map(e=>Math.abs(e[1].net_after_tax??e[1].net)),.01);
+  document.getElementById('strats').innerHTML=entries.map(([k,s])=>{
+    const n=s.net_after_tax??s.net;const w=Math.max(6,Math.abs(n)/maxAbs*100);
+    return `<div class="scard ${k===best&&n>0?'best':''}">
+      <div class="nm">${nice(k)} ${k===best&&n>0?'<span class="crown">★ BEST</span>':''}</div>
+      <div class="net ${n>=0?'pos':'neg'}">${money(n)}</div>
+      <div class="stat"><span>Win rate</span><span>${(s.win_rate||0).toFixed(1)}%</span></div>
+      <div class="stat"><span>Profit factor</span><span>${s.profit_factor??'—'}</span></div>
+      <div class="stat"><span>Trades</span><span>${s.trades||0}</span></div>
+      <div class="bar"><i style="width:${w}%;background:${n>=0?'var(--green)':'var(--red)'}"></i></div>
+    </div>`;}).join('');
+
+  // IV monitor
+  document.getElementById('iv-list').innerHTML=IV_SAMPLE.map(a=>`
+    <div class="iv-row"><span class="iv-asset">${a.asset}</span>
+      <span><span class="iv-val">${a.iv}%</span> <span style="color:var(--mut);font-size:12px">IV · rank ${a.rank}</span>
+      <span class="tag ${a.regime}">${a.regime==='vol'?'Volatile':'Quiet'}</span></span></div>`).join('');
+
+  // signals
+  document.getElementById('signals').innerHTML=SIG_SAMPLE.map(s=>`<tr>
+    <td>${s.t}</td><td><b>${s.asset}</b></td><td><span class="chip">${nice(s.strat)}</span></td>
+    <td><span class="tag ${s.regime}">${s.regime==='vol'?'Volatile':'Quiet'}</span></td>
+    <td style="color:var(--mut);font-size:12px">${s.legs}</td></tr>`).join('');
+
+  renderExtras();
+
+  // equity chart
+  const cur=d.equity_curve||[];
+  new Chart(document.getElementById('equity'),{type:'line',
+    data:{labels:cur.map(p=>(p.date||'').slice(-5)),datasets:[{data:cur.map(p=>p.equity),
+      borderColor:'#2dd4bf',borderWidth:2.5,tension:.35,fill:true,pointRadius:0,
+      backgroundColor:(c)=>{const g=c.chart.ctx.createLinearGradient(0,0,0,180);g.addColorStop(0,'rgba(45,212,191,.35)');g.addColorStop(1,'rgba(45,212,191,0)');return g;}}]},
+    options:{plugins:{legend:{display:false}},scales:{
+      x:{grid:{color:'#1a2340'},ticks:{color:'#8a97b8',font:{size:10}}},
+      y:{grid:{color:'#1a2340'},ticks:{color:'#8a97b8',font:{size:10}}}}}});
+}
+async function renderExtras(){
+  // Economic events: try live ff_calendar.json, filter to crypto movers
+  let evs=EV_SAMPLE;
+  try{
+    const r=await fetch('../data/ff_calendar.json',{cache:'no-store'});
+    if(r.ok){const raw=await r.json();
+      const now=Date.now();
+      const f=raw.filter(e=>{const usdHi=(e.country||'')==='USD'&&e.impact==='High';const named=MOVERS.test(e.title||'')&&e.impact!=='Low';return usdHi||named;})
+        .map(e=>({d:new Date(e.date),cc:e.country,imp:e.impact,title:e.title}))
+        .filter(e=>e.d.getTime()>now-3*3600e3).sort((a,b)=>a.d-b.d).slice(0,6);
+      if(f.length)evs=f.map(e=>({t:e.d.toLocaleString([], {weekday:'short',hour:'2-digit',minute:'2-digit'}),cc:e.cc,imp:e.imp,title:e.title}));
+    }
+  }catch(e){}
+  const impClass=i=>i==='High'?'vol':'quiet';
+  document.getElementById('events').innerHTML=evs.map(e=>`<tr>
+    <td style="width:70px;color:var(--mut)">${e.t}</td>
+    <td style="width:48px"><b>${e.cc}</b></td>
+    <td><span class="tag ${impClass(e.imp)}">${e.imp}</span></td>
+    <td>${e.title}</td></tr>`).join('')||'<tr><td style="color:var(--mut)">No crypto-mover events</td></tr>';
+
+  // Liquidation levels: try manual CSV
+  let liq=LIQ_SAMPLE;
+  try{
+    const r=await fetch('../data/liquidation_levels.csv',{cache:'no-store'});
+    if(r.ok){const t=await r.text();const rows=t.trim().split(/\r?\n/).slice(1)
+      .map(l=>{const[p,i]=l.split(',');return{price:+p,intensity:+i};}).filter(x=>x.price);
+      if(rows.length)liq=rows;}
+  }catch(e){}
+  liq=liq.sort((a,b)=>b.price-a.price);
+  const maxI=Math.max(...liq.map(l=>l.intensity),1);
+  document.getElementById('liq').innerHTML=liq.map(l=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:7px 0">
+      <span style="width:66px;font-variant-numeric:tabular-nums;font-weight:700">${l.price.toLocaleString()}</span>
+      <div class="bar" style="flex:1;margin:0"><i style="width:${l.intensity/maxI*100}%;background:linear-gradient(90deg,#2dd4bf,#fbbf24)"></i></div>
+      <span style="width:38px;text-align:right;color:var(--mut);font-size:12px">${l.intensity.toFixed(2)}</span>
+    </div>`).join('');
+}
+load();
+</script>
+</body>
+</html>
