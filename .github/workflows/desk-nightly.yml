@@ -26,10 +26,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install requests
+      - run: pip install requests openpyxl
       - name: settle + rebuild dashboard feed
         working-directory: bot
         run: python3 paper_tracker.py
+      - name: daily Excel export (OUTPUT FILE.xlsx)
+        working-directory: bot
+        run: python3 export_excel.py
       - name: heartbeat
         working-directory: bot
         run: python3 heartbeat.py
@@ -41,7 +44,7 @@ jobs:
         run: |
           git config user.name "deltahedge-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add data/ 2>/dev/null || true
+          git add -A 2>/dev/null || true
           git commit -m "nightly $(date -u +%FT%TZ)" || { echo "no changes"; exit 0; }
           git pull --rebase --autostash origin ${{ github.ref_name }} || true
           git push

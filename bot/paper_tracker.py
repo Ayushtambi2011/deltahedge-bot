@@ -20,7 +20,8 @@ PERF = os.path.join(DATA, "performance.json")
 CHAINS = os.path.join(DATA, "chains")
 
 FIELDS = ["id", "opened", "symbol", "strategy", "expiry", "legs_json", "net_credit",
-          "max_loss", "status", "settle_spot", "pnl_gross", "fees", "pnl_net", "closed"]
+          "max_loss", "qty", "status", "settle_spot", "pnl_gross", "fees", "pnl_net",
+          "closed", "context"]
 
 # --- fee model mirrors backtester/config.py (Delta exact) ---
 FEE_PCT_NOTIONAL = 0.0001
@@ -37,21 +38,24 @@ def _load(path):
         return list(csv.DictReader(f))
 
 
-def open_trade(symbol, strategy, expiry, legs, net_credit, max_loss):
-    """legs: list of dict(type,strike,side,entry_premium). Append an open paper trade."""
+def open_trade(symbol, strategy, expiry, legs, net_credit, max_loss, qty=1, context=None):
+    """legs: list of dict(type,strike,side,entry_premium). Append an open paper trade.
+    context: dict of entry conditions (IV, greeks, PCR, bias...) stored for the learning engine.
+    Rewrites the whole file so a changed header (new columns) stays consistent."""
     os.makedirs(DATA, exist_ok=True)
     rows = _load(TRADES)
     tid = f"{symbol}-{strategy}-{datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
     row = {"id": tid, "opened": datetime.datetime.utcnow().isoformat(), "symbol": symbol,
            "strategy": strategy, "expiry": expiry, "legs_json": json.dumps(legs),
-           "net_credit": net_credit, "max_loss": max_loss, "status": "open",
-           "settle_spot": "", "pnl_gross": "", "fees": "", "pnl_net": "", "closed": ""}
-    write_header = not os.path.exists(TRADES)
-    with open(TRADES, "a", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=FIELDS)
-        if write_header:
-            w.writeheader()
-        w.writerow(row)
+           "net_credit": net_credit, "max_loss": max_loss, "qty": qty, "status": "open",
+           "settle_spot": "", "pnl_gross": "", "fees": "", "pnl_net": "", "closed": "",
+           "context": json.dumps(context or {})}
+    rows.append(row)
+    with open(TRADES, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=FIELDS, extrasaction="ignore")
+        w.writeheader()
+        for r in rows:
+            w.writerow({k: r.get(k, "") for k in FIELDS})
     return tid
 
 

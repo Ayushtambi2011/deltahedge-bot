@@ -153,6 +153,20 @@ def tp_sl_prices(credit):
     return round(2 * debit, 4), round(0.5 * debit, 4), "sell-to-close"
 
 
+def entry_context(iv, spot, intel, ng, qty, pop, why, exp_type):
+    """Rich snapshot stored with every trade so the learning engine can find what works."""
+    ctx = {"entry_spot": round(spot, 2), "entry_iv": round(iv, 2) if iv else None,
+           "qty": qty, "pop": round(pop, 3), "why": why, "expiry_type": exp_type,
+           "net_delta": round(ng["delta"], 4), "net_theta": round(ng["theta"], 4),
+           "net_vega": round(ng["vega"], 4), "net_gamma": round(ng["gamma"], 5)}
+    if intel:
+        ctx.update({"bias": intel.get("bias"), "pcr": intel.get("pcr"),
+                    "max_pain": intel.get("max_pain"), "skew": intel.get("skew"),
+                    "support": intel["support"][0] if intel.get("support") else None,
+                    "resistance": intel["resistance"][0] if intel.get("resistance") else None})
+    return ctx
+
+
 def already_open(asset, strat, exp_s):
     for r in paper_tracker._load(paper_tracker.TRADES):
         if (r.get("status") == "open" and r.get("symbol") == asset
@@ -294,8 +308,10 @@ def entry_run():
                                     mult, why, soon, liq_notes, warns, ng, credit, max_loss,
                                     uncapped_profit=(strat == "long_strangle"))
                 send_telegram(msg)
+                qn, popn = size_qty(max_loss), pop_estimate(legs, chain)
+                ctx = entry_context(iv, spot, intel, ng, qn, popn, why, exp_type)
                 paper_tracker.open_trade(asset, strat_label, exp_s, legs,
-                                         round(credit, 4), round(max_loss, 4))
+                                         round(credit, 4), round(max_loss, 4), qty=qn, context=ctx)
                 print(f"{asset} {exp_type}: signalled {strat_label} (greeks_ok={ok}) — {why}")
 
             # --- extra scanner: cheap strangle on BTC daily (buy +/-offset if both premiums cheap) ---
@@ -309,8 +325,10 @@ def entry_run():
                                         intel, mult, why, soon, [], warns, ng, credit, max_loss,
                                         uncapped_profit=True)
                     send_telegram(msg)
+                    qn, popn = size_qty(max_loss), pop_estimate(cs, chain)
+                    ctx = entry_context(iv, spot, intel, ng, qn, popn, why, exp_type)
                     paper_tracker.open_trade(asset, "cheap_strangle", exp_s, cs,
-                                             round(credit, 4), round(max_loss, 4))
+                                             round(credit, 4), round(max_loss, 4), qty=qn, context=ctx)
                     print(f"{asset} daily: cheap_strangle FIRED")
                 else:
                     print(f"{asset} daily: cheap_strangle condition not met")
@@ -332,8 +350,11 @@ def entry_run():
                                             intel, mult, why, soon, [], warns2, ng2, credit2, ml2,
                                             uncapped_profit=False)
                         send_telegram(msg)
+                        qn, popn = size_qty(ml2), pop_estimate(bf, chain)
+                        ctx = entry_context(iv, spot, intel, ng2, qn, popn, why, exp_type)
+                        ctx["rr"] = round(rr, 2)
                         paper_tracker.open_trade(asset, "butterfly", exp_s, bf,
-                                                 round(credit2, 4), round(ml2, 4))
+                                                 round(credit2, 4), round(ml2, 4), qty=qn, context=ctx)
                         print(f"{asset} daily: butterfly FIRED (R:R {rr:.1f})")
                     else:
                         print(f"{asset} daily: butterfly R:R condition not met")
