@@ -3,7 +3,9 @@ name: desk-entry
 # conditions warrant. A no-duplicate guard means each setup is only signalled once.
 on:
   schedule:
-    - cron: '5 */2 * * *'
+    - cron: '5 */2 * * *'    # every 2 hours (general scan)
+    - cron: '0 9 * * *'      # 09:00 UTC = 14:30 IST (3h to expiry — butterfly window opens)
+    - cron: '30 10 * * *'    # 10:30 UTC = 16:00 IST (1.5h to expiry — butterfly sweet spot)
   workflow_dispatch: {}      # lets you run it manually from the Actions tab
 
 permissions:

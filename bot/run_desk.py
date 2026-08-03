@@ -16,6 +16,7 @@ import json
 import os
 import sys
 import statistics
+import datetime
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "backtester"))
 import delta_client as dc
@@ -119,6 +120,20 @@ MARGIN_PER_TRADE = 100.0       # $ margin budget allocated to a single signal
 CHEAP_STRANGLE_OFFSET = 400.0
 CHEAP_STRANGLE_MAX_PREM = 100.0
 
+# --- butterfly pin bet: only 1-3h before daily expiry, when R:R >= min ---
+BUTTERFLY_OFFSET = {"BTC": 500.0, "ETH": 50.0}   # wing width per asset
+BUTTERFLY_MIN_RR = 4.0                            # require max_profit/debit >= this (1:4)
+SETTLE_UTC_HOUR = 12                              # Delta India daily expiry 17:30 IST = 12:00 UTC
+BUTTERFLY_WINDOW_H = (1.0, 3.0)                   # hours-to-expiry window
+
+
+def hours_to_expiry(exp_date):
+    """Hours until 17:30 IST (12:00 UTC) settlement on the expiry date."""
+    settle = datetime.datetime.combine(exp_date, datetime.time(SETTLE_UTC_HOUR, 0),
+                                       tzinfo=datetime.timezone.utc)
+    now = datetime.datetime.now(datetime.timezone.utc)
+    return (settle - now).total_seconds() / 3600.0
+
 
 def size_qty(max_loss_per_contract):
     """Contracts sized so this trade's margin (~max loss) fits MARGIN_PER_TRADE,
@@ -147,7 +162,7 @@ def already_open(asset, strat, exp_s):
 
 
 def format_signal(asset, strat, exp, exp_type, legs, chain, iv, intel, mult, why,
-                  soon, liq_notes, warns, ng, credit, max_loss):
+                  soon, liq_notes, warns, ng, credit, max_loss, uncapped_profit=False):
     spot = chain[0]["spot"]
     qty = size_qty(max_loss)
     mp = max_profit(legs, credit, mult, spot)
@@ -175,10 +190,16 @@ def format_signal(asset, strat, exp, exp_type, legs, chain, iv, intel, mult, why
     lines = [f"{dot} <b>{asset} {strat.replace('_',' ').upper()}</b> · {exp_type.upper()} · exp {exp}",
              f"spot {spot:,.0f} · ATM IV {iv:.0f}% · <i>{why}</i>" if iv else f"spot {spot:,.0f} · <i>{why}</i>",
              f"📦 <b>Qty {qty} contracts per leg</b> · margin ~${tot_ml:,.0f} · ${reserve} kept free", ""]
-    for l in legs:
-        s = "SELL" if l["side"] < 0 else "BUY "
-        lines.append(f"  {s} {qty}× {l['type'].upper()} {l['strike']:.0f} @ {l['entry_premium']}")
-    mp_txt = f"${tot_mp:,.2f}" if is_credit else "uncapped (big move)"
+    agg, order = {}, []
+    for l in legs:                       # combine duplicate legs (e.g. the 2 short body of a fly)
+        key = (l["side"], l["type"], l["strike"], l["entry_premium"])
+        if key not in agg:
+            agg[key] = 0; order.append(key)
+        agg[key] += 1
+    for side, typ, strike, prem in order:
+        s = "SELL" if side < 0 else "BUY "
+        lines.append(f"  {s} {qty*agg[(side,typ,strike,prem)]}× {typ.upper()} {strike:.0f} @ {prem}")
+    mp_txt = "uncapped (big move)" if uncapped_profit else f"${tot_mp:,.2f}"
     lines += ["",
               f"💰 Position {'credit' if is_credit else 'debit'} <b>${tot_credit:,.2f}</b> · "
               f"max loss <b>${tot_ml:,.2f}</b> · max profit {mp_txt}",
@@ -270,7 +291,8 @@ def entry_run():
                 ok, ng, warns = greeks.check(legs, chain, asset, spot, strategy=strat)
                 credit, max_loss = credit_and_maxloss(legs, mult, spot)
                 msg = format_signal(asset, strat, exp, exp_type, legs, chain, iv, intel,
-                                    mult, why, soon, liq_notes, warns, ng, credit, max_loss)
+                                    mult, why, soon, liq_notes, warns, ng, credit, max_loss,
+                                    uncapped_profit=(strat == "long_strangle"))
                 send_telegram(msg)
                 paper_tracker.open_trade(asset, strat_label, exp_s, legs,
                                          round(credit, 4), round(max_loss, 4))
@@ -284,13 +306,39 @@ def entry_run():
                     credit, max_loss = credit_and_maxloss(cs, mult, spot)
                     why = f"cheap strangle: ±{CHEAP_STRANGLE_OFFSET:.0f} premiums ≤ {CHEAP_STRANGLE_MAX_PREM:.0f}"
                     msg = format_signal(asset, "cheap_strangle", exp, exp_type, cs, chain, iv,
-                                        intel, mult, why, soon, [], warns, ng, credit, max_loss)
+                                        intel, mult, why, soon, [], warns, ng, credit, max_loss,
+                                        uncapped_profit=True)
                     send_telegram(msg)
                     paper_tracker.open_trade(asset, "cheap_strangle", exp_s, cs,
                                              round(credit, 4), round(max_loss, 4))
                     print(f"{asset} daily: cheap_strangle FIRED")
                 else:
                     print(f"{asset} daily: cheap_strangle condition not met")
+
+            # --- butterfly pin bet: BTC & ETH daily, only 1-3h before expiry, R:R >= min ---
+            if exp_type == "daily":
+                hte = hours_to_expiry(exp)
+                in_window = BUTTERFLY_WINDOW_H[0] <= hte <= BUTTERFLY_WINDOW_H[1]
+                if in_window and not already_open(asset, "butterfly", exp_s):
+                    bf = chain_loader.build_butterfly(chain, BUTTERFLY_OFFSET.get(asset, 500.0),
+                                                      BUTTERFLY_MIN_RR)
+                    if bf:
+                        ok, ng2, warns2 = greeks.check(bf, chain, asset, spot, strategy="butterfly")
+                        credit2, ml2 = credit_and_maxloss(bf, mult, spot)
+                        mp2 = max_profit(bf, credit2, mult, spot)
+                        rr = mp2 / ml2 if ml2 else 0
+                        why = f"butterfly pin · R:R {rr:.1f} · {hte:.1f}h to expiry"
+                        msg = format_signal(asset, "butterfly", exp, exp_type, bf, chain, iv,
+                                            intel, mult, why, soon, [], warns2, ng2, credit2, ml2,
+                                            uncapped_profit=False)
+                        send_telegram(msg)
+                        paper_tracker.open_trade(asset, "butterfly", exp_s, bf,
+                                                 round(credit2, 4), round(ml2, 4))
+                        print(f"{asset} daily: butterfly FIRED (R:R {rr:.1f})")
+                    else:
+                        print(f"{asset} daily: butterfly R:R condition not met")
+                elif exp_type == "daily":
+                    print(f"{asset} daily: butterfly window {hte:.1f}h (needs 1-3h)")
     perf = paper_tracker.build_performance()
     print(f"performance.json updated · settled={perf['total_settled']} open={perf['open_positions']}")
 

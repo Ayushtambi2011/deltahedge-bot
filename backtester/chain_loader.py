@@ -59,6 +59,38 @@ def build_iron_condor(rows, short_delta=0.16, wing_pct=0.02):
     ]
 
 
+def build_butterfly(rows, offset=500.0, min_rr=4.0):
+    """Long CALL butterfly: buy K1, sell 2 center, buy K3 (equal spacing). A debit 'pin' bet:
+    max loss = debit, max profit = width - debit. Scans candidate centers OUTWARD from spot
+    and returns the CLOSEST-to-spot fly whose reward:risk >= min_rr (the highest-probability
+    setup that still pays 1:min_rr). Best 1-3h before expiry when debits are small."""
+    spot = rows[0]["spot"]
+    if not spot:
+        return None
+    call_strikes = sorted({r["strike"] for r in rows
+                           if r["type"] == "call" and r.get("mid") is not None})
+    centers = sorted([k for k in call_strikes if abs(k - spot) <= 3 * offset],
+                     key=lambda k: abs(k - spot))
+    for c in centers:
+        center = _nearest_by_strike(rows, "call", c)
+        k1 = _nearest_by_strike(rows, "call", c - offset)
+        k3 = _nearest_by_strike(rows, "call", c + offset)
+        if not (center and k1 and k3):
+            continue
+        if k1["strike"] >= c or k3["strike"] <= c:
+            continue
+        if None in (center["mid"], k1["mid"], k3["mid"]):
+            continue
+        debit = k1["mid"] - 2 * center["mid"] + k3["mid"]
+        width = c - k1["strike"]
+        if debit <= 0 or width <= 0:
+            continue
+        max_profit = width - debit
+        if max_profit > 0 and (max_profit / debit) >= min_rr:
+            return [_leg(k1, +1), _leg(center, -1), _leg(center, -1), _leg(k3, +1)]
+    return None
+
+
 def build_cheap_strangle(rows, offset=400.0, max_prem=100.0):
     """Buy call at ~spot+offset and put at ~spot-offset, ONLY if BOTH mids <= max_prem.
     A low-cost bet on a big daily move. Returns legs or None if the condition isn't met."""
