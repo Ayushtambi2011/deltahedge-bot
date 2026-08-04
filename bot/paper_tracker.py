@@ -85,6 +85,8 @@ def settle_open_trades():
     today = datetime.date.today().isoformat()
     changed = False
     for r in rows:
+        if r.get("strategy") == "gold_ema":       # futures: settled by gold_strategy at TP/SL, not expiry
+            continue
         if r["status"] != "open" or r["expiry"] > today:
             continue
         spot = _settle_spot(r["symbol"], r["expiry"])

@@ -366,10 +366,13 @@ def entry_run():
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--mode", choices=["entry", "monitor"], default="entry")
+    ap.add_argument("--mode", choices=["entry", "monitor", "gold"], default="entry")
     args = ap.parse_args()
     if args.mode == "monitor":
         modification_monitor.check()
+    elif args.mode == "gold":
+        import gold_strategy
+        gold_strategy.run()
     else:
         entry_run()
 
