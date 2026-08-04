@@ -1,33 +1,54 @@
-"""Confirm the Delta gold symbol + candle feed work. Run locally: python3 gold_test.py
-Tries a few likely symbols and prints which one returns 15-min candles."""
+"""Find the Delta gold symbol + confirm the candle feed. Run: python3 gold_test.py
+1) sanity-checks BTCUSD candles (is the pipeline working?),
+2) asks Delta for all perpetual products and prints any gold/XAU ones,
+3) tries candles for each gold symbol found.
+"""
 import sys, os
 sys.path.insert(0, os.path.dirname(__file__))
 import delta_client as dc
 import gold_strategy as g
 
-CANDIDATES = [os.environ.get("GOLD_SYMBOL", "XAUUSD"), "XAUUSD", "XAUUSDT", "XAU_USDT", "GOLD"]
 
 def main():
-    seen = set()
-    for sym in CANDIDATES:
-        if sym in seen:
-            continue
-        seen.add(sym)
+    # 1) pipeline sanity check with a known symbol
+    try:
+        b = g.candles("BTCUSD", "15m", count=30)
+        print(f"[pipeline] BTCUSD 15m -> {len(b)} candles" +
+              (f", last={b[-1]['c']}" if b else "  (EMPTY — candle pipeline problem, not the symbol)"))
+    except Exception as e:
+        print(f"[pipeline] BTCUSD error: {e}")
+
+    # 2) discover gold perpetual symbol(s)
+    print("\n[discover] fetching perpetual products…")
+    gold_syms = []
+    try:
+        res = dc._get("/v2/products", params={"contract_types": "perpetual_futures"}).get("result", [])
+        for p in res:
+            sym = p.get("symbol", "")
+            desc = (p.get("description") or "") + " " + (p.get("underlying_asset", {}) or {}).get("symbol", "")
+            if "XAU" in sym.upper() or "GOLD" in sym.upper() or "GOLD" in desc.upper() or "XAU" in desc.upper():
+                gold_syms.append(sym)
+                print(f"   found: {sym}   ({p.get('description','')})")
+    except Exception as e:
+        print(f"   products fetch failed: {e}")
+
+    if not gold_syms:
+        print("   no gold perpetual found via products. Paste this whole output to me.")
+        return
+
+    # 3) test candles for each gold symbol
+    print("\n[candles] testing gold symbols…")
+    for sym in gold_syms:
         try:
-            g.GOLD_SYMBOL = sym
             c = g.candles(sym, "15m", count=60)
             if c:
-                print(f"✓ {sym}: got {len(c)} 15m candles. last close = {c[-1]['c']}")
-                d, e20, e50 = g.trend_dir(c)
-                print(f"   direction: {'LONG' if d>0 else 'SHORT' if d<0 else 'none'} "
-                      f"(20EMA {round(e20[-1],2) if e20[-1] else '-'} vs 50EMA {round(e50[-1],2) if e50[-1] else '-'})")
-                print(f"\nUse this symbol. Set GOLD_SYMBOL={sym} in the desk-gold workflow if not XAUUSD.")
+                print(f"✓ {sym}: {len(c)} 15m candles, last close = {c[-1]['c']}")
+                print(f"\n>>> Use GOLD_SYMBOL = {sym}")
                 return
-            else:
-                print(f"· {sym}: no candles")
+            print(f"· {sym}: no candles")
         except Exception as e:
             print(f"· {sym}: error {e}")
-    print("\n✗ None worked — paste me the output and I'll find the right symbol.")
+
 
 if __name__ == "__main__":
     main()

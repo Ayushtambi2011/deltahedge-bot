@@ -22,7 +22,7 @@ import paper_tracker
 from signal_bot import send_telegram, load_dotenv
 
 # --- config (verify the symbol with gold_test.py) ---
-GOLD_SYMBOL = os.environ.get("GOLD_SYMBOL", "XAUUSD")
+GOLD_SYMBOL = os.environ.get("GOLD_SYMBOL", "XAUTUSD")   # Delta gold perp (Tether Gold), verified
 TP_MULT = 2.5              # TP = 2.5 x SL distance
 RISK_PCT = 0.01           # 1% of account
 ACCOUNT = 1000.0

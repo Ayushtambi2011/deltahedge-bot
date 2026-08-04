@@ -20,7 +20,7 @@ jobs:
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       DELTA_BASE_URL: https://api.india.delta.exchange
-      GOLD_SYMBOL: XAUUSD
+      GOLD_SYMBOL: XAUTUSD
       DRY_RUN: 'false'
     steps:
       - uses: actions/checkout@v4
