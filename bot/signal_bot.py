@@ -37,13 +37,34 @@ def load_dotenv():
                 k, v = line.split("=", 1)
                 os.environ.setdefault(k.strip(), v.strip())
 
+import re as _re
+
+
+def _strip_html(t):
+    return _re.sub(r"<[^>]+>", "", t)
+
+
 def send_telegram(text):
     token = env("TELEGRAM_BOT_TOKEN"); chat = env("TELEGRAM_CHAT_ID")
     if env("DRY_RUN", "true").lower() == "true" or not token or not chat:
         print("[DRY_RUN] would send:\n" + text)
         return
     url = f"https://api.telegram.org/bot{token}/sendMessage"
-    requests.post(url, json={"chat_id": chat, "text": text, "parse_mode": "HTML"}, timeout=15)
+    # Telegram hard-caps at 4096 chars — split. Then verify delivery; fall back to plain text.
+    chunks = [text[i:i + 3800] for i in range(0, len(text), 3800)] or [text]
+    for chunk in chunks:
+        try:
+            r = requests.post(url, json={"chat_id": chat, "text": chunk, "parse_mode": "HTML"},
+                              timeout=15)
+            if r.status_code != 200:
+                # HTML parse failure (stray <,>,&) or similar — resend as plain text
+                r2 = requests.post(url, json={"chat_id": chat, "text": _strip_html(chunk)}, timeout=15)
+                if r2.status_code != 200:
+                    print(f"telegram send failed: {r.status_code} {r.text[:200]}")
+                else:
+                    print("telegram: sent as plain text (HTML rejected)")
+        except Exception as e:
+            print("telegram send error:", e)
 
 def regime(realized_vol, iv):
     """Trivial placeholder — REPLACE with a backtested signal (docs/05_LEARNING_LOOP.md)."""

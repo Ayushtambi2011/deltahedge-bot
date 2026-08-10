@@ -150,7 +150,7 @@ def format_signal(sig):
     d = "LONG" if sig["direction"] > 0 else "SHORT"
     side = "BUY" if sig["direction"] > 0 else "SELL"
     dot = "🟢" if sig["direction"] > 0 else "🔴"
-    trend = "20>50 (up)" if sig["direction"] > 0 else "20<50 (down)"
+    trend = "20 above 50 (up)" if sig["direction"] > 0 else "20 below 50 (down)"
     return "\n".join([
         f"{dot} <b>GOLD 20/50 EMA · 15m · {d}</b>",
         f"XAUUSD {sig['entry']:,.2f} · {trend} · 3rd retest · 1H agrees", "",
