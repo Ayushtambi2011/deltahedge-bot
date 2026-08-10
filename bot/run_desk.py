@@ -258,9 +258,16 @@ def emit_card(asset, strat, exp, exp_type, legs, chain, iv, intel, mult, why,
     for side, typ, strike, prem in order:
         s = "SELL" if side < 0 else "BUY "
         legs_lines.append(f"{s} {qty*agg[(side,typ,strike,prem)]}x {typ.upper()} {strike:.0f} @ {prem}")
+    if uncapped_profit:
+        rr_txt, rr_col = "uncapped", render_card.GREEN
+    else:
+        rr = (tot_mp / tot_ml) if tot_ml else 0
+        rr_txt = f"1:{rr:.2f}"
+        rr_col = render_card.GREEN if rr >= 1 else render_card.AMBER
     stats = [("Position " + ("credit" if is_credit else "debit"), f"${tot_credit:,.2f}",
               render_card.GREEN if is_credit else render_card.AMBER),
              ("Max loss", f"${tot_ml:,.2f}", render_card.RED),
+             ("R:R", rr_txt, rr_col),
              ("POP", f"{pop*100:.0f}%", render_card.WHITE)]
     if is_credit:
         tp_line = f"TP: buy back <= ${0.5*tot_credit:,.2f}   ->  +${0.5*tot_credit:,.2f}"
