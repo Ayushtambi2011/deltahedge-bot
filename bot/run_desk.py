@@ -370,6 +370,8 @@ def main():
     args = ap.parse_args()
     if args.mode == "monitor":
         modification_monitor.check()
+        import option_exits
+        option_exits.check()             # realistic TP/SL close using live premiums
     elif args.mode == "gold":
         import gold_strategy
         gold_strategy.run()
