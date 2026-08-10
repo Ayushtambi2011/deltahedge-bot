@@ -28,8 +28,9 @@ import greeks
 import liquidation
 import market_intel
 import strategy_selector
-from signal_bot import send_telegram, load_dotenv
+from signal_bot import send_telegram, send_telegram_photo, load_dotenv
 import chain_loader
+import render_card
 
 BUILDERS = {
     "iron_condor": lambda chain, trend: chain_loader.build_iron_condor(chain),
@@ -235,6 +236,52 @@ def format_signal(asset, strat, exp, exp_type, legs, chain, iv, intel, mult, why
     return "\n".join(lines)
 
 
+def emit_card(asset, strat, exp, exp_type, legs, chain, iv, intel, mult, why,
+              credit, max_loss, uncapped_profit=False):
+    """Render the signal as a JPEG card and send it as a Telegram photo. True if sent."""
+    if not render_card.available():
+        return False
+    spot = chain[0]["spot"]
+    qty = size_qty(max_loss)
+    pop = pop_estimate(legs, chain)
+    is_credit = credit > 0
+    tot_credit = abs(credit) * qty
+    tot_ml = max_loss * qty
+    tot_mp = max_profit(legs, credit, mult, spot) * qty
+    agg, order = {}, []
+    for l in legs:
+        k = (l["side"], l["type"], l["strike"], l["entry_premium"])
+        if k not in agg:
+            agg[k] = 0; order.append(k)
+        agg[k] += 1
+    legs_lines = []
+    for side, typ, strike, prem in order:
+        s = "SELL" if side < 0 else "BUY "
+        legs_lines.append(f"{s} {qty*agg[(side,typ,strike,prem)]}x {typ.upper()} {strike:.0f} @ {prem}")
+    stats = [("Position " + ("credit" if is_credit else "debit"), f"${tot_credit:,.2f}",
+              render_card.GREEN if is_credit else render_card.AMBER),
+             ("Max loss", f"${tot_ml:,.2f}", render_card.RED),
+             ("POP", f"{pop*100:.0f}%", render_card.WHITE)]
+    if is_credit:
+        tp_line = f"TP: buy back <= ${0.5*tot_credit:,.2f}   ->  +${0.5*tot_credit:,.2f}"
+        sl_line = f"SL: cost hits ${2*tot_credit:,.2f}   ->  -${tot_credit:,.2f}"
+        accent = render_card.GREEN
+    else:
+        tp_line = f"TP: sell >= ${2*tot_credit:,.2f}   ->  +${tot_credit:,.2f}"
+        sl_line = f"SL: value to ${0.5*tot_credit:,.2f}   ->  -${0.5*tot_credit:,.2f}"
+        accent = render_card.AMBER
+    sub = f"spot {spot:,.0f} - " + (f"IV {iv:.0f}% - " if iv else "") + why
+    path = render_card.render_signal(asset, strat, exp_type,
+                                     exp if isinstance(exp, str) else str(exp),
+                                     sub, legs_lines, stats, tp_line, sl_line,
+                                     "PAPER - not executed. Manage as ONE position.", accent=accent)
+    cap = f"{asset} {strat.replace('_',' ')} - {why}"
+    if intel and intel.get("max_pain"):
+        cap += (f"\nS/R {intel['support'][0]:.0f}/{intel['resistance'][0]:.0f} - "
+                f"max pain {intel['max_pain']:.0f} - bias {intel['bias']}")
+    return send_telegram_photo(path, cap)
+
+
 def entry_run():
     load_dotenv()
     # --- event context (shared across assets) ---
@@ -304,10 +351,11 @@ def entry_run():
 
                 ok, ng, warns = greeks.check(legs, chain, asset, spot, strategy=strat)
                 credit, max_loss = credit_and_maxloss(legs, mult, spot)
-                msg = format_signal(asset, strat, exp, exp_type, legs, chain, iv, intel,
-                                    mult, why, soon, liq_notes, warns, ng, credit, max_loss,
-                                    uncapped_profit=(strat == "long_strangle"))
-                send_telegram(msg)
+                if not emit_card(asset, strat, exp, exp_type, legs, chain, iv, intel, mult, why,
+                                 credit, max_loss, uncapped_profit=(strat == "long_strangle")):
+                    send_telegram(format_signal(asset, strat, exp, exp_type, legs, chain, iv, intel,
+                                  mult, why, soon, liq_notes, warns, ng, credit, max_loss,
+                                  uncapped_profit=(strat == "long_strangle")))
                 qn, popn = size_qty(max_loss), pop_estimate(legs, chain)
                 ctx = entry_context(iv, spot, intel, ng, qn, popn, why, exp_type)
                 paper_tracker.open_trade(asset, strat_label, exp_s, legs,
@@ -321,10 +369,11 @@ def entry_run():
                     ok, ng, warns = greeks.check(cs, chain, asset, spot, strategy="cheap_strangle")
                     credit, max_loss = credit_and_maxloss(cs, mult, spot)
                     why = f"cheap strangle: ±{CHEAP_STRANGLE_OFFSET:.0f} premiums ≤ {CHEAP_STRANGLE_MAX_PREM:.0f}"
-                    msg = format_signal(asset, "cheap_strangle", exp, exp_type, cs, chain, iv,
-                                        intel, mult, why, soon, [], warns, ng, credit, max_loss,
-                                        uncapped_profit=True)
-                    send_telegram(msg)
+                    if not emit_card(asset, "cheap_strangle", exp, exp_type, cs, chain, iv, intel,
+                                     mult, why, credit, max_loss, uncapped_profit=True):
+                        send_telegram(format_signal(asset, "cheap_strangle", exp, exp_type, cs, chain,
+                                      iv, intel, mult, why, soon, [], warns, ng, credit, max_loss,
+                                      uncapped_profit=True))
                     qn, popn = size_qty(max_loss), pop_estimate(cs, chain)
                     ctx = entry_context(iv, spot, intel, ng, qn, popn, why, exp_type)
                     paper_tracker.open_trade(asset, "cheap_strangle", exp_s, cs,
@@ -346,10 +395,11 @@ def entry_run():
                         mp2 = max_profit(bf, credit2, mult, spot)
                         rr = mp2 / ml2 if ml2 else 0
                         why = f"butterfly pin · R:R {rr:.1f} · {hte:.1f}h to expiry"
-                        msg = format_signal(asset, "butterfly", exp, exp_type, bf, chain, iv,
-                                            intel, mult, why, soon, [], warns2, ng2, credit2, ml2,
-                                            uncapped_profit=False)
-                        send_telegram(msg)
+                        if not emit_card(asset, "butterfly", exp, exp_type, bf, chain, iv, intel,
+                                         mult, why, credit2, ml2, uncapped_profit=False):
+                            send_telegram(format_signal(asset, "butterfly", exp, exp_type, bf, chain,
+                                          iv, intel, mult, why, soon, [], warns2, ng2, credit2, ml2,
+                                          uncapped_profit=False))
                         qn, popn = size_qty(ml2), pop_estimate(bf, chain)
                         ctx = entry_context(iv, spot, intel, ng2, qn, popn, why, exp_type)
                         ctx["rr"] = round(rr, 2)

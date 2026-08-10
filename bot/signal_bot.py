@@ -66,6 +66,22 @@ def send_telegram(text):
         except Exception as e:
             print("telegram send error:", e)
 
+def send_telegram_photo(path, caption=""):
+    token = env("TELEGRAM_BOT_TOKEN"); chat = env("TELEGRAM_CHAT_ID")
+    if env("DRY_RUN", "true").lower() == "true" or not token or not chat or not path:
+        print("[DRY_RUN] would send photo:", path); return False
+    url = f"https://api.telegram.org/bot{token}/sendPhoto"
+    try:
+        with open(path, "rb") as fh:
+            r = requests.post(url, data={"chat_id": chat, "caption": caption[:1000]},
+                              files={"photo": fh}, timeout=30)
+        if r.status_code != 200:
+            print("sendPhoto failed:", r.status_code, r.text[:200]); return False
+        return True
+    except Exception as e:
+        print("sendPhoto error:", e); return False
+
+
 def regime(realized_vol, iv):
     """Trivial placeholder — REPLACE with a backtested signal (docs/05_LEARNING_LOOP.md)."""
     if realized_vol is None:
