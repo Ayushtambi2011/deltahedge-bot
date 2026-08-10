@@ -1,7 +1,7 @@
 {
-  "updated": "2026-08-10T05:54:08.178314",
+  "updated": "2026-08-10T07:22:44.403836",
   "open_positions": 2,
-  "total_settled": 119,
+  "total_settled": 120,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -478,6 +478,10 @@
     {
       "date": "2026-08-10",
       "equity": -23.5116
+    },
+    {
+      "date": "2026-08-10",
+      "equity": -23.564
     }
   ],
   "strategies": {
@@ -492,14 +496,14 @@
       "net_after_tax": -3.2197
     },
     "cheap_strangle": {
-      "trades": 46,
+      "trades": 47,
       "wins": 0,
       "gross_win": 0.0,
-      "gross_loss": -2.312,
-      "net": -2.312,
+      "gross_loss": -2.3644,
+      "net": -2.3644,
       "win_rate": 0.0,
       "profit_factor": 0.0,
-      "net_after_tax": -2.312
+      "net_after_tax": -2.3644
     },
     "butterfly": {
       "trades": 22,
