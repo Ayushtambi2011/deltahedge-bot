@@ -1,7 +1,7 @@
 {
-  "updated": "2026-08-10T10:15:48.436878",
-  "open_positions": 3,
-  "total_settled": 123,
+  "updated": "2026-08-10T11:18:57.740225",
+  "open_positions": 2,
+  "total_settled": 124,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -461,39 +461,43 @@
     },
     {
       "date": "2026-08-10",
-      "equity": -23.5582
+      "equity": -7.1484
     },
     {
       "date": "2026-08-10",
-      "equity": -23.7431
+      "equity": -23.7592
     },
     {
       "date": "2026-08-10",
-      "equity": -23.7059
+      "equity": -23.9441
     },
     {
       "date": "2026-08-10",
-      "equity": -23.8289
+      "equity": -23.9069
     },
     {
       "date": "2026-08-10",
-      "equity": -23.9346
+      "equity": -24.0299
     },
     {
       "date": "2026-08-10",
-      "equity": -24.012
+      "equity": -24.1356
     },
     {
       "date": "2026-08-10",
-      "equity": -24.0644
+      "equity": -24.213
     },
     {
       "date": "2026-08-10",
-      "equity": -24.0812
+      "equity": -24.2654
     },
     {
       "date": "2026-08-10",
-      "equity": -24.0756
+      "equity": -24.2822
+    },
+    {
+      "date": "2026-08-10",
+      "equity": -24.2766
     }
   ],
   "strategies": {
@@ -538,14 +542,14 @@
       "net_after_tax": 0.0498
     },
     "long_strangle_wk": {
-      "trades": 1,
+      "trades": 2,
       "wins": 0,
       "gross_win": 0.0,
-      "gross_loss": -0.5004,
-      "net": -0.5004,
+      "gross_loss": -0.7014,
+      "net": -0.7014,
       "win_rate": 0.0,
       "profit_factor": 0.0,
-      "net_after_tax": -0.5004
+      "net_after_tax": -0.7014
     },
     "gold_ema": {
       "trades": 1,
