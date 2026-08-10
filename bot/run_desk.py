@@ -315,7 +315,7 @@ def entry_run():
                 print(f"{asset} {exp_type}: signalled {strat_label} (greeks_ok={ok}) — {why}")
 
             # --- extra scanner: cheap strangle on BTC daily (buy +/-offset if both premiums cheap) ---
-            if asset == "BTC" and exp_type == "daily" and not already_open(asset, "cheap_strangle", exp_s):
+            if asset == "BTC" and exp_type == "daily" and bool(soon) and not already_open(asset, "cheap_strangle", exp_s):
                 cs = chain_loader.build_cheap_strangle(chain, CHEAP_STRANGLE_OFFSET, CHEAP_STRANGLE_MAX_PREM)
                 if cs:
                     ok, ng, warns = greeks.check(cs, chain, asset, spot, strategy="cheap_strangle")
@@ -337,7 +337,7 @@ def entry_run():
             if exp_type == "daily":
                 hte = hours_to_expiry(exp)
                 in_window = BUTTERFLY_WINDOW_H[0] <= hte <= BUTTERFLY_WINDOW_H[1]
-                if in_window and not already_open(asset, "butterfly", exp_s):
+                if in_window and bool(soon) and not already_open(asset, "butterfly", exp_s):
                     bf = chain_loader.build_butterfly(chain, BUTTERFLY_OFFSET.get(asset, 500.0),
                                                       BUTTERFLY_MIN_RR)
                     if bf:
