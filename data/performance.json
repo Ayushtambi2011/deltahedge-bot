@@ -1,7 +1,7 @@
 {
-  "updated": "2026-08-12T08:46:05.212993",
+  "updated": "2026-08-12T09:57:29.352360",
   "open_positions": 4,
-  "total_settled": 157,
+  "total_settled": 162,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -630,6 +630,26 @@
     {
       "date": "2026-08-12",
       "equity": -24.236
+    },
+    {
+      "date": "2026-08-12",
+      "equity": -24.1875
+    },
+    {
+      "date": "2026-08-12",
+      "equity": -24.2404
+    },
+    {
+      "date": "2026-08-12",
+      "equity": -24.2245
+    },
+    {
+      "date": "2026-08-12",
+      "equity": -24.2168
+    },
+    {
+      "date": "2026-08-12",
+      "equity": -24.2322
     }
   ],
   "strategies": {
@@ -644,24 +664,24 @@
       "net_after_tax": -3.2399
     },
     "cheap_strangle": {
-      "trades": 52,
+      "trades": 53,
       "wins": 0,
       "gross_win": 0.0,
-      "gross_loss": -2.4692999999999996,
-      "net": -2.4693,
+      "gross_loss": -2.5221999999999998,
+      "net": -2.5222,
       "win_rate": 0.0,
       "profit_factor": 0.0,
-      "net_after_tax": -2.4693
+      "net_after_tax": -2.5222
     },
     "butterfly": {
-      "trades": 22,
-      "wins": 0,
-      "gross_win": 0.0,
-      "gross_loss": -1.4774,
-      "net": -1.4774,
-      "win_rate": 0.0,
-      "profit_factor": 0.0,
-      "net_after_tax": -1.4774
+      "trades": 24,
+      "wins": 1,
+      "gross_win": 0.0159,
+      "gross_loss": -1.4928000000000001,
+      "net": -1.4769,
+      "win_rate": 4.2,
+      "profit_factor": 0.01,
+      "net_after_tax": -1.4769
     },
     "iron_condor_wk": {
       "trades": 1,
@@ -694,14 +714,14 @@
       "net_after_tax": -16.6108
     },
     "iron_condor": {
-      "trades": 29,
-      "wins": 27,
-      "gross_win": 0.9461,
+      "trades": 31,
+      "wins": 29,
+      "gross_win": 1.0023,
       "gross_loss": -0.7544,
-      "net": 0.1917,
-      "win_rate": 93.1,
-      "profit_factor": 1.25,
-      "net_after_tax": 0.1342
+      "net": 0.2479,
+      "win_rate": 93.5,
+      "profit_factor": 1.33,
+      "net_after_tax": 0.1735
     }
   }
 }
