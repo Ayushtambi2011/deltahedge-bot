@@ -1,7 +1,7 @@
 {
-  "updated": "2026-08-13T08:50:12.288585",
+  "updated": "2026-08-13T09:59:47.114361",
   "open_positions": 3,
-  "total_settled": 181,
+  "total_settled": 186,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -726,38 +726,58 @@
     {
       "date": "2026-08-13",
       "equity": -36.7009
+    },
+    {
+      "date": "2026-08-13",
+      "equity": -36.6851
+    },
+    {
+      "date": "2026-08-13",
+      "equity": -36.6872
+    },
+    {
+      "date": "2026-08-13",
+      "equity": -36.8195
+    },
+    {
+      "date": "2026-08-13",
+      "equity": -36.8247
+    },
+    {
+      "date": "2026-08-13",
+      "equity": -36.8351
     }
   ],
   "strategies": {
     "long_strangle": {
-      "trades": 51,
+      "trades": 52,
       "wins": 1,
       "gross_win": 0.026,
-      "gross_loss": -3.2834,
-      "net": -3.2574,
-      "win_rate": 2.0,
+      "gross_loss": -3.2885999999999997,
+      "net": -3.2626,
+      "win_rate": 1.9,
       "profit_factor": 0.01,
-      "net_after_tax": -3.2574
+      "net_after_tax": -3.2626
     },
     "cheap_strangle": {
-      "trades": 57,
+      "trades": 58,
       "wins": 0,
       "gross_win": 0.0,
-      "gross_loss": -2.6155,
-      "net": -2.6155,
+      "gross_loss": -2.6176,
+      "net": -2.6176,
       "win_rate": 0.0,
       "profit_factor": 0.0,
-      "net_after_tax": -2.6155
+      "net_after_tax": -2.6176
     },
     "butterfly": {
-      "trades": 24,
+      "trades": 26,
       "wins": 1,
       "gross_win": 0.0159,
-      "gross_loss": -1.4928000000000001,
-      "net": -1.4769,
-      "win_rate": 4.2,
+      "gross_loss": -1.6355000000000002,
+      "net": -1.6196,
+      "win_rate": 3.8,
       "profit_factor": 0.01,
-      "net_after_tax": -1.4769
+      "net_after_tax": -1.6196
     },
     "iron_condor_wk": {
       "trades": 2,
@@ -790,14 +810,14 @@
       "net_after_tax": -29.144
     },
     "iron_condor": {
-      "trades": 43,
-      "wins": 40,
-      "gross_win": 1.314,
+      "trades": 44,
+      "wins": 41,
+      "gross_win": 1.3298,
       "gross_loss": -0.9328,
-      "net": 0.3812,
-      "win_rate": 93.0,
-      "profit_factor": 1.41,
-      "net_after_tax": 0.2668
+      "net": 0.397,
+      "win_rate": 93.2,
+      "profit_factor": 1.43,
+      "net_after_tax": 0.2779
     }
   }
 }
