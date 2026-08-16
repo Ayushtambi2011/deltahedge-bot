@@ -1,7 +1,7 @@
 {
-  "updated": "2026-08-16T23:35:53.734817",
-  "open_positions": 5,
-  "total_settled": 248,
+  "updated": "2026-08-16T23:55:40.399105",
+  "open_positions": 4,
+  "total_settled": 249,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -909,91 +909,95 @@
     },
     {
       "date": "2026-08-16",
-      "equity": -35.9315
+      "equity": -52.0835
     },
     {
       "date": "2026-08-16",
-      "equity": -35.92
+      "equity": -52.0549
     },
     {
       "date": "2026-08-16",
-      "equity": -35.9003
+      "equity": -52.0434
     },
     {
       "date": "2026-08-16",
-      "equity": -35.8925
+      "equity": -52.0237
     },
     {
       "date": "2026-08-16",
-      "equity": -35.8781
+      "equity": -52.0159
     },
     {
       "date": "2026-08-16",
-      "equity": -35.8727
+      "equity": -52.0015
     },
     {
       "date": "2026-08-16",
-      "equity": -35.8378
+      "equity": -51.9961
     },
     {
       "date": "2026-08-16",
-      "equity": -35.8218
+      "equity": -51.9612
     },
     {
       "date": "2026-08-16",
-      "equity": -35.7782
+      "equity": -51.9452
     },
     {
       "date": "2026-08-16",
-      "equity": -35.7663
+      "equity": -51.9016
     },
     {
       "date": "2026-08-16",
-      "equity": -35.7231
+      "equity": -51.8897
     },
     {
       "date": "2026-08-16",
-      "equity": -35.7137
+      "equity": -51.8465
     },
     {
       "date": "2026-08-16",
-      "equity": -35.673
+      "equity": -51.8371
     },
     {
       "date": "2026-08-16",
-      "equity": -35.6655
+      "equity": -51.7964
     },
     {
       "date": "2026-08-16",
-      "equity": -35.6325
+      "equity": -51.7889
     },
     {
       "date": "2026-08-16",
-      "equity": -35.6269
+      "equity": -51.7559
     },
     {
       "date": "2026-08-16",
-      "equity": -35.6007
+      "equity": -51.7503
     },
     {
       "date": "2026-08-16",
-      "equity": -35.5962
+      "equity": -51.7241
     },
     {
       "date": "2026-08-16",
-      "equity": -35.5736
+      "equity": -51.7196
     },
     {
       "date": "2026-08-16",
-      "equity": -35.5561
+      "equity": -51.697
     },
     {
       "date": "2026-08-16",
-      "equity": -35.5237
+      "equity": -51.6795
     },
     {
       "date": "2026-08-16",
-      "equity": -35.4987
+      "equity": -51.6471
+    },
+    {
+      "date": "2026-08-16",
+      "equity": -51.6221
     }
   ],
   "strategies": {
@@ -1048,14 +1052,14 @@
       "net_after_tax": -0.7014
     },
     "gold_ema": {
-      "trades": 2,
+      "trades": 3,
       "wins": 0,
       "gross_win": 0.0,
-      "gross_loss": -29.144000000000002,
-      "net": -29.144,
+      "gross_loss": -45.2674,
+      "net": -45.2674,
       "win_rate": 0.0,
       "profit_factor": 0.0,
-      "net_after_tax": -29.144
+      "net_after_tax": -45.2674
     },
     "iron_condor": {
       "trades": 101,
