@@ -1,7 +1,7 @@
 {
-  "updated": "2026-08-19T20:43:05.158301",
-  "open_positions": 8,
-  "total_settled": 366,
+  "updated": "2026-08-19T21:01:23.079864",
+  "open_positions": 5,
+  "total_settled": 369,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -1466,6 +1466,18 @@
     {
       "date": "2026-08-19",
       "equity": -65.039
+    },
+    {
+      "date": "2026-08-19",
+      "equity": -65.03
+    },
+    {
+      "date": "2026-08-19",
+      "equity": -65.4845
+    },
+    {
+      "date": "2026-08-19",
+      "equity": -65.5398
     }
   ],
   "strategies": {
@@ -1500,14 +1512,14 @@
       "net_after_tax": -2.4949
     },
     "iron_condor_wk": {
-      "trades": 6,
-      "wins": 4,
-      "gross_win": 0.2253,
+      "trades": 7,
+      "wins": 5,
+      "gross_win": 0.2343,
       "gross_loss": -0.3159,
-      "net": -0.0906,
-      "win_rate": 66.7,
-      "profit_factor": 0.71,
-      "net_after_tax": -0.0906
+      "net": -0.0816,
+      "win_rate": 71.4,
+      "profit_factor": 0.74,
+      "net_after_tax": -0.0816
     },
     "long_strangle_wk": {
       "trades": 2,
@@ -1530,14 +1542,14 @@
       "net_after_tax": -58.5155
     },
     "iron_condor": {
-      "trades": 172,
+      "trades": 173,
       "wins": 167,
       "gross_win": 4.995200000000002,
-      "gross_loss": -1.2300999999999997,
-      "net": 3.7651,
-      "win_rate": 97.1,
-      "profit_factor": 4.06,
-      "net_after_tax": 2.6356
+      "gross_loss": -1.6845999999999997,
+      "net": 3.3106,
+      "win_rate": 96.5,
+      "profit_factor": 2.97,
+      "net_after_tax": 2.3174
     },
     "broken_wing_butterfly": {
       "trades": 2,
@@ -1550,14 +1562,14 @@
       "net_after_tax": -0.348
     },
     "broken_wing_butterfly_wk": {
-      "trades": 1,
+      "trades": 2,
       "wins": 0,
       "gross_win": 0.0,
-      "gross_loss": -0.0672,
-      "net": -0.0672,
+      "gross_loss": -0.1225,
+      "net": -0.1225,
       "win_rate": 0.0,
       "profit_factor": 0.0,
-      "net_after_tax": -0.0672
+      "net_after_tax": -0.1225
     }
   }
 }
