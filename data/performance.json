@@ -1,7 +1,7 @@
 {
-  "updated": "2026-08-26T08:23:39.783070",
+  "updated": "2026-08-26T09:10:48.177384",
   "open_positions": 7,
-  "total_settled": 778,
+  "total_settled": 783,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -3114,6 +3114,26 @@
     {
       "date": "2026-08-26",
       "equity": -13.693
+    },
+    {
+      "date": "2026-08-26",
+      "equity": -13.635
+    },
+    {
+      "date": "2026-08-26",
+      "equity": -13.6992
+    },
+    {
+      "date": "2026-08-26",
+      "equity": -13.8724
+    },
+    {
+      "date": "2026-08-26",
+      "equity": -13.8567
+    },
+    {
+      "date": "2026-08-26",
+      "equity": -14.0079
     }
   ],
   "strategies": {
@@ -3128,24 +3148,24 @@
       "net_after_tax": -3.5026
     },
     "cheap_strangle": {
-      "trades": 82,
+      "trades": 83,
       "wins": 0,
       "gross_win": 0.0,
-      "gross_loss": -3.597600000000001,
-      "net": -3.5976,
+      "gross_loss": -3.661800000000001,
+      "net": -3.6618,
       "win_rate": 0.0,
       "profit_factor": 0.0,
-      "net_after_tax": -3.5976
+      "net_after_tax": -3.6618
     },
     "butterfly": {
-      "trades": 42,
+      "trades": 44,
       "wins": 3,
       "gross_win": 0.212,
-      "gross_loss": -3.0193,
-      "net": -2.8073,
-      "win_rate": 7.1,
-      "profit_factor": 0.07,
-      "net_after_tax": -2.8073
+      "gross_loss": -3.3437,
+      "net": -3.1317,
+      "win_rate": 6.8,
+      "profit_factor": 0.06,
+      "net_after_tax": -3.1317
     },
     "iron_condor_wk": {
       "trades": 14,
@@ -3178,14 +3198,14 @@
       "net_after_tax": -15.8874
     },
     "iron_condor": {
-      "trades": 381,
-      "wins": 372,
-      "gross_win": 19.859300000000005,
+      "trades": 383,
+      "wins": 374,
+      "gross_win": 19.933000000000003,
       "gross_loss": -3.0531999999999995,
-      "net": 16.8061,
-      "win_rate": 97.6,
-      "profit_factor": 6.5,
-      "net_after_tax": 11.7643
+      "net": 16.8798,
+      "win_rate": 97.7,
+      "profit_factor": 6.53,
+      "net_after_tax": 11.8159
     },
     "broken_wing_butterfly": {
       "trades": 179,
