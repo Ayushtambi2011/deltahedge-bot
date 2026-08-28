@@ -1,7 +1,7 @@
 {
-  "updated": "2026-08-28T03:54:26.190495",
-  "open_positions": 7,
-  "total_settled": 803,
+  "updated": "2026-08-28T05:22:24.774757",
+  "open_positions": 4,
+  "total_settled": 807,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -3214,6 +3214,22 @@
     {
       "date": "2026-08-27",
       "equity": -28.5538
+    },
+    {
+      "date": "2026-08-28",
+      "equity": -31.1728
+    },
+    {
+      "date": "2026-08-28",
+      "equity": -31.7696
+    },
+    {
+      "date": "2026-08-28",
+      "equity": -31.6338
+    },
+    {
+      "date": "2026-08-28",
+      "equity": -31.5975
     }
   ],
   "strategies": {
@@ -3248,14 +3264,14 @@
       "net_after_tax": -3.5162
     },
     "iron_condor_wk": {
-      "trades": 16,
+      "trades": 17,
       "wins": 10,
       "gross_win": 0.39380000000000004,
-      "gross_loss": -2.6058000000000003,
-      "net": -2.212,
-      "win_rate": 62.5,
-      "profit_factor": 0.15,
-      "net_after_tax": -2.212
+      "gross_loss": -5.2248,
+      "net": -4.831,
+      "win_rate": 58.8,
+      "profit_factor": 0.08,
+      "net_after_tax": -4.831
     },
     "long_strangle_wk": {
       "trades": 2,
@@ -3278,14 +3294,14 @@
       "net_after_tax": -30.1315
     },
     "iron_condor": {
-      "trades": 389,
-      "wins": 380,
-      "gross_win": 20.345800000000004,
+      "trades": 391,
+      "wins": 382,
+      "gross_win": 20.517900000000004,
       "gross_loss": -3.0531999999999995,
-      "net": 17.2926,
+      "net": 17.4647,
       "win_rate": 97.7,
-      "profit_factor": 6.66,
-      "net_after_tax": 12.1048
+      "profit_factor": 6.72,
+      "net_after_tax": 12.2253
     },
     "broken_wing_butterfly": {
       "trades": 179,
@@ -3298,14 +3314,14 @@
       "net_after_tax": -1.4377
     },
     "broken_wing_butterfly_wk": {
-      "trades": 6,
+      "trades": 7,
       "wins": 0,
       "gross_win": 0.0,
-      "gross_loss": -0.4482,
-      "net": -0.4482,
+      "gross_loss": -1.045,
+      "net": -1.045,
       "win_rate": 0.0,
       "profit_factor": 0.0,
-      "net_after_tax": -0.4482
+      "net_after_tax": -1.045
     }
   }
 }
