@@ -63,3 +63,30 @@ Lessons:
 - ✅ iron_condor: 305 trades, PF 4.56, net 10.8664 — working; keep and consider more weight.
 - ⚠️ 158 trade(s) hit ~max loss — review whether entries were too close to events or wings too narrow (docs/03).
 - 🕒 Best entry hours (UTC): 01 (100.0%), 03 (87.2%)
+
+
+## 2026-08-30 — learning review
+Overall: 817 trades, win 65.1%, PF 0.69, net -30.8711.
+
+Per strategy:
+- iron_condor: 399 trades, win 97.7%, PF 6.87, net 17.9326
+- long_strangle_wk: 2 trades, win 0.0%, PF 0.0, net -0.7014
+- broken_wing_butterfly_wk: 7 trades, win 0.0%, PF 0.0, net -1.045
+- broken_wing_butterfly: 179 trades, win 69.3%, PF 0.79, net -1.4377
+- butterfly: 48 trades, win 6.2%, PF 0.06, net -3.5162
+- long_strangle: 70 trades, win 1.4%, PF 0.01, net -3.6581
+- cheap_strangle: 86 trades, win 0.0%, PF 0.0, net -3.7413
+- iron_condor_wk: 19 trades, win 63.2%, PF 0.12, net -4.5725
+- gold_ema: 7 trades, win 28.6%, PF 0.59, net -30.1315
+
+Lessons:
+- ❌ gold_ema: 7 trades, PF 0.59, net -30.1315 — losing after fees. Tighten its trigger or retire it.
+- ❌ iron_condor_wk: 19 trades, PF 0.12, net -4.5725 — losing after fees. Tighten its trigger or retire it.
+- ❌ cheap_strangle: 86 trades, PF 0.0, net -3.7413 — losing after fees. Tighten its trigger or retire it.
+- ❌ long_strangle: 70 trades, PF 0.01, net -3.6581 — losing after fees. Tighten its trigger or retire it.
+- ❌ butterfly: 48 trades, PF 0.06, net -3.5162 — losing after fees. Tighten its trigger or retire it.
+- ❌ broken_wing_butterfly: 179 trades, PF 0.79, net -1.4377 — losing after fees. Tighten its trigger or retire it.
+- ❌ broken_wing_butterfly_wk: 7 trades, PF 0.0, net -1.045 — losing after fees. Tighten its trigger or retire it.
+- ✅ iron_condor: 399 trades, PF 6.87, net 17.9326 — working; keep and consider more weight.
+- ⚠️ 178 trade(s) hit ~max loss — review whether entries were too close to events or wings too narrow (docs/03).
+- 🕒 Best entry hours (UTC): 01 (100.0%), 03 (89.8%)
