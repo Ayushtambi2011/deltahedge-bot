@@ -1,7 +1,7 @@
 {
-  "updated": "2026-09-07T04:38:00.879768",
-  "open_positions": 5,
-  "total_settled": 885,
+  "updated": "2026-09-07T09:44:28.515652",
+  "open_positions": 4,
+  "total_settled": 887,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -3517,31 +3517,39 @@
     },
     {
       "date": "2026-09-07",
-      "equity": -29.0243
+      "equity": -11.5773
     },
     {
       "date": "2026-09-07",
-      "equity": -28.972
+      "equity": -11.4154
     },
     {
       "date": "2026-09-07",
-      "equity": -28.9301
+      "equity": -11.3631
     },
     {
       "date": "2026-09-07",
-      "equity": -28.8993
+      "equity": -11.3212
     },
     {
       "date": "2026-09-07",
-      "equity": -28.8033
+      "equity": -11.2904
     },
     {
       "date": "2026-09-07",
-      "equity": -28.7601
+      "equity": -11.1944
     },
     {
       "date": "2026-09-07",
-      "equity": -28.7351
+      "equity": -11.1512
+    },
+    {
+      "date": "2026-09-07",
+      "equity": -11.1262
+    },
+    {
+      "date": "2026-09-07",
+      "equity": -11.0969
     }
   ],
   "strategies": {
@@ -3596,24 +3604,24 @@
       "net_after_tax": -0.7014
     },
     "gold_ema": {
-      "trades": 7,
-      "wins": 2,
-      "gross_win": 42.6281,
+      "trades": 8,
+      "wins": 3,
+      "gross_win": 60.237,
       "gross_loss": -72.7596,
-      "net": -30.1315,
-      "win_rate": 28.6,
-      "profit_factor": 0.59,
-      "net_after_tax": -30.1315
+      "net": -12.5226,
+      "win_rate": 37.5,
+      "profit_factor": 0.83,
+      "net_after_tax": -12.5226
     },
     "iron_condor": {
-      "trades": 441,
-      "wins": 429,
-      "gross_win": 23.845600000000005,
+      "trades": 442,
+      "wins": 430,
+      "gross_win": 23.874900000000004,
       "gross_loss": -3.6969,
-      "net": 20.1487,
+      "net": 20.178,
       "win_rate": 97.3,
-      "profit_factor": 6.45,
-      "net_after_tax": 14.1041
+      "profit_factor": 6.46,
+      "net_after_tax": 14.1246
     },
     "broken_wing_butterfly": {
       "trades": 187,
