@@ -1,7 +1,7 @@
 {
-  "updated": "2026-09-10T22:42:17.648505",
-  "open_positions": 7,
-  "total_settled": 919,
+  "updated": "2026-09-11T00:34:38.235649",
+  "open_positions": 3,
+  "total_settled": 923,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -3678,6 +3678,22 @@
     {
       "date": "2026-09-10",
       "equity": -8.7285
+    },
+    {
+      "date": "2026-09-11",
+      "equity": -8.7594
+    },
+    {
+      "date": "2026-09-11",
+      "equity": -8.2656
+    },
+    {
+      "date": "2026-09-11",
+      "equity": -8.1386
+    },
+    {
+      "date": "2026-09-11",
+      "equity": -8.0891
     }
   ],
   "strategies": {
@@ -3712,14 +3728,14 @@
       "net_after_tax": -3.7529
     },
     "iron_condor_wk": {
-      "trades": 24,
+      "trades": 25,
       "wins": 16,
       "gross_win": 1.2019000000000002,
-      "gross_loss": -5.3819,
-      "net": -4.18,
-      "win_rate": 66.7,
+      "gross_loss": -5.4128,
+      "net": -4.2109,
+      "win_rate": 64.0,
       "profit_factor": 0.22,
-      "net_after_tax": -4.18
+      "net_after_tax": -4.2109
     },
     "long_strangle_wk": {
       "trades": 2,
@@ -3742,14 +3758,14 @@
       "net_after_tax": -12.5226
     },
     "iron_condor": {
-      "trades": 464,
-      "wins": 450,
-      "gross_win": 25.175800000000006,
+      "trades": 466,
+      "wins": 452,
+      "gross_win": 25.352300000000003,
       "gross_loss": -3.9086,
-      "net": 21.2672,
+      "net": 21.4437,
       "win_rate": 97.0,
-      "profit_factor": 6.44,
-      "net_after_tax": 14.887
+      "profit_factor": 6.49,
+      "net_after_tax": 15.0106
     },
     "broken_wing_butterfly": {
       "trades": 189,
@@ -3762,14 +3778,14 @@
       "net_after_tax": 0.1639
     },
     "broken_wing_butterfly_wk": {
-      "trades": 11,
-      "wins": 2,
-      "gross_win": 0.5706,
+      "trades": 12,
+      "wins": 3,
+      "gross_win": 1.0644,
       "gross_loss": -1.6722,
-      "net": -1.1016,
-      "win_rate": 18.2,
-      "profit_factor": 0.34,
-      "net_after_tax": -1.1016
+      "net": -0.6078,
+      "win_rate": 25.0,
+      "profit_factor": 0.64,
+      "net_after_tax": -0.6078
     }
   }
 }
