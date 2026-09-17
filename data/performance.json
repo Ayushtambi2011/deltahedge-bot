@@ -1,7 +1,7 @@
 {
-  "updated": "2026-09-17T18:54:17.224703",
-  "open_positions": 6,
-  "total_settled": 981,
+  "updated": "2026-09-17T19:54:51.736371",
+  "open_positions": 3,
+  "total_settled": 984,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -3909,23 +3909,35 @@
     },
     {
       "date": "2026-09-17",
-      "equity": -33.2416
+      "equity": -33.2283
     },
     {
       "date": "2026-09-17",
-      "equity": -33.0984
+      "equity": -33.0623
     },
     {
       "date": "2026-09-17",
-      "equity": -33.043
+      "equity": -32.9191
     },
     {
       "date": "2026-09-17",
-      "equity": -32.9405
+      "equity": -32.8637
     },
     {
       "date": "2026-09-17",
-      "equity": -32.9171
+      "equity": -32.7612
+    },
+    {
+      "date": "2026-09-17",
+      "equity": -32.7378
+    },
+    {
+      "date": "2026-09-17",
+      "equity": -32.6393
+    },
+    {
+      "date": "2026-09-17",
+      "equity": -32.6001
     }
   ],
   "strategies": {
@@ -3960,14 +3972,14 @@
       "net_after_tax": -4.6082
     },
     "iron_condor_wk": {
-      "trades": 27,
-      "wins": 17,
-      "gross_win": 1.4186,
+      "trades": 28,
+      "wins": 18,
+      "gross_win": 1.5979,
       "gross_loss": -5.7888,
-      "net": -4.3702,
-      "win_rate": 63.0,
-      "profit_factor": 0.25,
-      "net_after_tax": -4.3702
+      "net": -4.1909,
+      "win_rate": 64.3,
+      "profit_factor": 0.28,
+      "net_after_tax": -4.1909
     },
     "long_strangle_wk": {
       "trades": 2,
@@ -3990,14 +4002,14 @@
       "net_after_tax": -36.7548
     },
     "iron_condor": {
-      "trades": 501,
-      "wins": 483,
-      "gross_win": 27.378999999999998,
+      "trades": 503,
+      "wins": 485,
+      "gross_win": 27.5167,
       "gross_loss": -4.9167,
-      "net": 22.4623,
+      "net": 22.6,
       "win_rate": 96.4,
-      "profit_factor": 5.57,
-      "net_after_tax": 15.7236
+      "profit_factor": 5.6,
+      "net_after_tax": 15.82
     },
     "broken_wing_butterfly": {
       "trades": 194,
