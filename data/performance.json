@@ -1,7 +1,7 @@
 {
-  "updated": "2026-09-23T09:58:56.181336",
-  "open_positions": 7,
-  "total_settled": 1063,
+  "updated": "2026-09-23T10:08:05.661975",
+  "open_positions": 6,
+  "total_settled": 1064,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -4197,63 +4197,67 @@
     },
     {
       "date": "2026-09-23",
-      "equity": -35.4941
+      "equity": -35.5955
     },
     {
       "date": "2026-09-23",
-      "equity": -35.511
+      "equity": -35.4455
     },
     {
       "date": "2026-09-23",
-      "equity": -35.6344
+      "equity": -35.4624
     },
     {
       "date": "2026-09-23",
-      "equity": -35.5618
+      "equity": -35.5858
     },
     {
       "date": "2026-09-23",
-      "equity": -35.4219
+      "equity": -35.5132
     },
     {
       "date": "2026-09-23",
-      "equity": -35.4022
+      "equity": -35.3733
     },
     {
       "date": "2026-09-23",
-      "equity": -35.3831
+      "equity": -35.3536
     },
     {
       "date": "2026-09-23",
-      "equity": -35.3341
+      "equity": -35.3345
     },
     {
       "date": "2026-09-23",
-      "equity": -35.2742
+      "equity": -35.2855
     },
     {
       "date": "2026-09-23",
-      "equity": -35.3639
+      "equity": -35.2256
     },
     {
       "date": "2026-09-23",
-      "equity": -35.4302
+      "equity": -35.3153
     },
     {
       "date": "2026-09-23",
-      "equity": -35.4784
+      "equity": -35.3816
     },
     {
       "date": "2026-09-23",
-      "equity": -35.4482
+      "equity": -35.4298
     },
     {
       "date": "2026-09-23",
-      "equity": -35.4701
+      "equity": -35.3996
     },
     {
       "date": "2026-09-23",
-      "equity": -35.6017
+      "equity": -35.4215
+    },
+    {
+      "date": "2026-09-23",
+      "equity": -35.5531
     }
   ],
   "strategies": {
@@ -4288,14 +4292,14 @@
       "net_after_tax": -4.788
     },
     "iron_condor_wk": {
-      "trades": 34,
-      "wins": 20,
-      "gross_win": 1.8008000000000002,
+      "trades": 35,
+      "wins": 21,
+      "gross_win": 1.8494000000000002,
       "gross_loss": -6.8005,
-      "net": -4.9997,
-      "win_rate": 58.8,
-      "profit_factor": 0.26,
-      "net_after_tax": -4.9997
+      "net": -4.9511,
+      "win_rate": 60.0,
+      "profit_factor": 0.27,
+      "net_after_tax": -4.9511
     },
     "long_strangle_wk": {
       "trades": 2,
