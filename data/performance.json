@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-04T02:37:37.185075",
-  "open_positions": 7,
-  "total_settled": 1370,
+  "updated": "2026-11-04T03:03:40.348619",
+  "open_positions": 6,
+  "total_settled": 1371,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -5477,11 +5477,15 @@
     },
     {
       "date": "2026-11-04",
-      "equity": 14.7188
+      "equity": 14.0984
     },
     {
       "date": "2026-11-04",
-      "equity": 14.7949
+      "equity": 14.279
+    },
+    {
+      "date": "2026-11-04",
+      "equity": 14.3551
     }
   ],
   "strategies": {
@@ -5566,14 +5570,14 @@
       "net_after_tax": -0.494
     },
     "broken_wing_butterfly_wk": {
-      "trades": 30,
+      "trades": 31,
       "wins": 8,
       "gross_win": 2.5184,
-      "gross_loss": -5.3229999999999995,
-      "net": -2.8046,
-      "win_rate": 26.7,
-      "profit_factor": 0.47,
-      "net_after_tax": -2.8046
+      "gross_loss": -5.7627999999999995,
+      "net": -3.2444,
+      "win_rate": 25.8,
+      "profit_factor": 0.44,
+      "net_after_tax": -3.2444
     }
   }
 }
