@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-07T23:57:58.986465",
-  "open_positions": 6,
-  "total_settled": 1399,
+  "updated": "2026-11-08T02:01:27.818050",
+  "open_positions": 5,
+  "total_settled": 1400,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -5598,6 +5598,10 @@
     {
       "date": "2026-11-07",
       "equity": 38.1038
+    },
+    {
+      "date": "2026-11-08",
+      "equity": 38.1652
     }
   ],
   "strategies": {
@@ -5662,14 +5666,14 @@
       "net_after_tax": 19.1887
     },
     "iron_condor": {
-      "trades": 757,
-      "wins": 724,
-      "gross_win": 43.040199999999984,
+      "trades": 758,
+      "wins": 725,
+      "gross_win": 43.10159999999998,
       "gross_loss": -8.661800000000001,
-      "net": 34.3784,
+      "net": 34.4398,
       "win_rate": 95.6,
-      "profit_factor": 4.97,
-      "net_after_tax": 24.0649
+      "profit_factor": 4.98,
+      "net_after_tax": 24.1079
     },
     "broken_wing_butterfly": {
       "trades": 257,
