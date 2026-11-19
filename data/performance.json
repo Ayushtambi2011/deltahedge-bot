@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-19T01:33:31.794595",
+  "updated": "2026-11-19T09:19:50.775735",
   "open_positions": 7,
-  "total_settled": 1494,
+  "total_settled": 1499,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -5978,6 +5978,26 @@
     {
       "date": "2026-11-19",
       "equity": 56.8105
+    },
+    {
+      "date": "2026-11-19",
+      "equity": 56.8898
+    },
+    {
+      "date": "2026-11-19",
+      "equity": 56.8024
+    },
+    {
+      "date": "2026-11-19",
+      "equity": 56.6677
+    },
+    {
+      "date": "2026-11-19",
+      "equity": 56.6988
+    },
+    {
+      "date": "2026-11-19",
+      "equity": 56.5066
     }
   ],
   "strategies": {
@@ -5992,24 +6012,24 @@
       "net_after_tax": -4.3586
     },
     "cheap_strangle": {
-      "trades": 116,
+      "trades": 117,
       "wins": 0,
       "gross_win": 0.0,
-      "gross_loss": -5.438800000000001,
-      "net": -5.4388,
+      "gross_loss": -5.526200000000001,
+      "net": -5.5262,
       "win_rate": 0.0,
       "profit_factor": 0.0,
-      "net_after_tax": -5.4388
+      "net_after_tax": -5.5262
     },
     "butterfly": {
-      "trades": 70,
+      "trades": 72,
       "wins": 4,
       "gross_win": 0.2678,
-      "gross_loss": -6.015300000000001,
-      "net": -5.7475,
-      "win_rate": 5.7,
+      "gross_loss": -6.3422,
+      "net": -6.0744,
+      "win_rate": 5.6,
       "profit_factor": 0.04,
-      "net_after_tax": -5.7475
+      "net_after_tax": -6.0744
     },
     "iron_condor_wk": {
       "trades": 73,
@@ -6042,14 +6062,14 @@
       "net_after_tax": 33.7352
     },
     "iron_condor": {
-      "trades": 798,
-      "wins": 763,
-      "gross_win": 46.15859999999998,
+      "trades": 800,
+      "wins": 765,
+      "gross_win": 46.268999999999984,
       "gross_loss": -8.8917,
-      "net": 37.2669,
+      "net": 37.3773,
       "win_rate": 95.6,
-      "profit_factor": 5.19,
-      "net_after_tax": 26.0868
+      "profit_factor": 5.2,
+      "net_after_tax": 26.1641
     },
     "broken_wing_butterfly": {
       "trades": 289,
