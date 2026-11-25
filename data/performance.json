@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-24T15:05:12.900492",
-  "open_positions": 12,
-  "total_settled": 1538,
+  "updated": "2026-11-25T00:36:14.810092",
+  "open_positions": 9,
+  "total_settled": 1541,
   "equity_curve": [
     {
       "date": "2026-08-04",
@@ -6154,6 +6154,18 @@
     {
       "date": "2026-11-24",
       "equity": 52.3285
+    },
+    {
+      "date": "2026-11-25",
+      "equity": 52.3792
+    },
+    {
+      "date": "2026-11-25",
+      "equity": 51.9582
+    },
+    {
+      "date": "2026-11-25",
+      "equity": 52.003
     }
   ],
   "strategies": {
@@ -6188,14 +6200,14 @@
       "net_after_tax": -6.0744
     },
     "iron_condor_wk": {
-      "trades": 76,
-      "wins": 47,
-      "gross_win": 4.399000000000001,
+      "trades": 77,
+      "wins": 48,
+      "gross_win": 4.449700000000001,
       "gross_loss": -9.856900000000003,
-      "net": -5.4579,
-      "win_rate": 61.8,
+      "net": -5.4072,
+      "win_rate": 62.3,
       "profit_factor": 0.45,
-      "net_after_tax": -5.4579
+      "net_after_tax": -5.4072
     },
     "long_strangle_wk": {
       "trades": 2,
@@ -6218,24 +6230,24 @@
       "net_after_tax": 33.7352
     },
     "iron_condor": {
-      "trades": 817,
-      "wins": 780,
-      "gross_win": 47.52160000000001,
+      "trades": 818,
+      "wins": 781,
+      "gross_win": 47.56640000000001,
       "gross_loss": -9.8727,
-      "net": 37.6489,
+      "net": 37.6937,
       "win_rate": 95.5,
-      "profit_factor": 4.81,
-      "net_after_tax": 26.3542
+      "profit_factor": 4.82,
+      "net_after_tax": 26.3856
     },
     "broken_wing_butterfly": {
-      "trades": 304,
+      "trades": 305,
       "wins": 187,
       "gross_win": 12.903700000000004,
-      "gross_loss": -18.528600000000004,
-      "net": -5.6249,
-      "win_rate": 61.5,
-      "profit_factor": 0.7,
-      "net_after_tax": -5.6249
+      "gross_loss": -18.949600000000004,
+      "net": -6.0459,
+      "win_rate": 61.3,
+      "profit_factor": 0.68,
+      "net_after_tax": -6.0459
     },
     "broken_wing_butterfly_wk": {
       "trades": 44,
